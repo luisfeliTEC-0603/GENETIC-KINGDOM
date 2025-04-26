@@ -1,4 +1,21 @@
 #include "whizard.h"
 
-WhizardTower :: WhizardTower(int damage, int speed, int scope, int regTime, int reloadTime, int type, string imageDir) : Tower (damage, speed, scope, regTime, reloadTime, type, imageDir) {}
+WhizardTower :: WhizardTower(int xpos, int ypos, int damage, int speed, int scope, int regTime, int reloadTime, int type, string imageDir) : Tower (xpos, ypos, damage, speed, scope, regTime, reloadTime, type, imageDir) {}
 
+void WhizardTower :: Upgrade1() {
+    int actDamage =  this->getDamage(); 
+    actDamage += 10;
+    this->setDamage(actDamage);
+}
+
+void WhizardTower :: Upgrade2() {
+    int actDamage =  this->getDamage(); 
+    actDamage += 10;
+    this->setDamage(actDamage);
+}
+
+void WhizardTower :: Upgrade3() {
+    int actDamage =  this->getDamage(); 
+    actDamage += 10;
+    this->setDamage(actDamage);
+}

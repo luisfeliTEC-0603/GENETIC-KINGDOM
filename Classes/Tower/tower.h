@@ -31,20 +31,43 @@ using namespace std;
 
 class Tower {
 private:
+    int xpos;
+    int ypos;
     int damage;
     int speed;
     int scope;
-    int regTIme;
+    int regTime;
     int reloadTime;
     int type; //type = 1 arqueros, type = 2 magos, type = 3 artilleros
     string imageDir; // direccion de imagen asociada
 
 public:
-    Tower (int damage, int speed, int scope, int regTime, int reloadTime, int type, string imageDir);
+    Tower (int xpos, int ypos, int damage, int speed, int scope, int regTime, int reloadTime, int type, string imageDir);
     virtual void Upgrade1 ();
     virtual void Upgrade2 ();
     virtual void Upgrade3 ();
     virtual ~Tower() {} // destructor
+
+    //Getters and setters for the upgrades
+    // Getters
+    int getDamage() const { return damage; }
+    int getSpeed() const { return speed; }
+    int getScope() const { return scope; }
+    int getRegTime() const { return regTime; }
+    int getReloadTime() const { return reloadTime; }
+    int getType() const { return type; }
+    int getXpos() const { return xpos; }
+    int getYpos() const { return ypos; }
+    string getImageDir() const { return imageDir; }
+
+    // Setters
+    void setDamage(int d) { damage = d; }
+    void setSpeed(int s) { speed = s; }
+    void setScope(int sc) { scope = sc; }
+    void setRegTime(int rt) { regTime = rt; }
+    void setReloadTime(int rlt) { reloadTime = rlt; }
+    void setType(int t) { type = t; }
+    void setImageDir(const string& dir) { imageDir = dir; }
 
 };
 
