@@ -1,93 +1,53 @@
 #include "raylib.h"
 
-#include "rlgl.h"
-#include "raymath.h"
+#include "Game/game.hpp"
 
-int main ()
-{
-    const int screenWidth = 1366;
-    const int screenHeight = 768;
+int main() {
+    // Initialization
+    Map gameMap = LoadMapFromFile("Saves/map.txt");
+    if (gameMap.grid.empty()) {
+        return -1; // Exit if map failed to load
+    }
 
-    InitWindow(screenWidth, screenHeight, "CE2103 - GENETIC KINGDOM");
-
-    Camera2D camera = { 0 };
-    camera.zoom = 1.0f;
-
-    int zoomMode = 0;
-
+    // Calculate the required window size based on the map dimensions
+    int windowWidth = gameMap.width * CELL_SIZE;
+    int windowHeight = gameMap.height * CELL_SIZE;
+    
+    InitWindow(windowWidth, windowHeight, "CE2103");
     SetTargetFPS(60);
 
-    while (!WindowShouldClose())
-    {
-        if (IsKeyPressed(KEY_ONE)) zoomMode = 0;
-        else if (IsKeyPressed(KEY_TWO)) zoomMode = 1;
-        
-        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT))
-        {
-            Vector2 delta = GetMouseDelta();
-            delta = Vector2Scale(delta, -1.0f/camera.zoom);
-            camera.target = Vector2Add(camera.target, delta);
+    // Create player at the start position
+    Enemy player = {
+        {(float)gameMap.start.x * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2, 
+         (float)gameMap.start.y * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2},
+        {(float)PLAYER_SIZE, (float)PLAYER_SIZE},
+        PLAYER_COLOR
+    };
+
+    // Main game loop
+    while (!WindowShouldClose()) {
+        // Update
+        UpdateEnemy(player, gameMap);
+
+        // Check win condition
+        if (CheckWinCondition(player, gameMap)) {
+            DrawText("You Win!", windowWidth / 2 - 100, windowHeight / 2 - 20, 40, GREEN);
+            EndDrawing();
+            WaitTime(2); // Show win message for 2 seconds
+            break;
         }
 
-        if (zoomMode == 0)
-        {
-
-            float wheel = GetMouseWheelMove();
-            if (wheel != 0)
-            {
-                Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), camera);
-
-                camera.offset = GetMousePosition();
-
-                camera.target = mouseWorldPos;
-
-                float scale = 0.2f*wheel;
-                camera.zoom = Clamp(expf(logf(camera.zoom)+scale), 0.125f, 64.0f);
-            }
-        }
-        else
-        {
-            if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT))
-            {
-                Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), camera);
-
-                camera.offset = GetMousePosition();
-
-                camera.target = mouseWorldPos;
-            }
-            if (IsMouseButtonDown(MOUSE_BUTTON_RIGHT))
-            {
-                float deltaX = GetMouseDelta().x;
-                float scale = 0.005f*deltaX;
-                camera.zoom = Clamp(expf(logf(camera.zoom)+scale), 0.125f, 64.0f);
-            }
-        }
-
+        // Draw
         BeginDrawing();
-            ClearBackground(RAYWHITE);
-
-            BeginMode2D(camera);
-
-                rlPushMatrix();
-                    rlTranslatef(0, 25*50, 0);
-                    rlRotatef(90, 1, 0, 0);
-                    DrawGrid(100, 50);
-                rlPopMatrix();
-                DrawCircle(GetScreenWidth()/2, GetScreenHeight()/2, 50, MAROON);
-                
-            EndMode2D();
-            
-            DrawCircleV(GetMousePosition(), 4, DARKGRAY);
-            DrawTextEx(GetFontDefault(), TextFormat("[%i, %i]", GetMouseX(), GetMouseY()), 
-                Vector2Add(GetMousePosition(), (Vector2){ -44, -24 }), 20, 2, BLACK);
-
-            DrawText("[1][2] Select mouse zoom mode (Wheel or Move)", 20, 20, 20, DARKGRAY);
-            if (zoomMode == 0) DrawText("Mouse left button drag to move, mouse wheel to zoom", 20, 50, 20, DARKGRAY);
-            else DrawText("Mouse left button drag to move, mouse press and move to zoom", 20, 50, 20, DARKGRAY);
+        ClearBackground(BLACK);
+        
+        DrawMap(gameMap);
+        DrawRectangleV(player.position, player.size, player.color);
         
         EndDrawing();
     }
 
+    // Cleanup
     CloseWindow();
     return 0;
 }

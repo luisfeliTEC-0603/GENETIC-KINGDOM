@@ -5,7 +5,7 @@ CC = g++
 TARGET = game
 
 # Source file(s)
-SRC = Sources/main.cpp
+SRC = Sources/main.cpp Sources/Game/game.cpp Sources/Level/gameLevel.cpp 
 
 # Compiler flags
 CXXFLAGS = -Wall -std=c++17

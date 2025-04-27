@@ -6,13 +6,16 @@ Cada enemigo tiene atributos como:
 • Resistencia a la magia 
 • Resistencia a la artillería
 */
-#ifndef ENEMIES_H
-#define ENEMIES_H
 
-#include <string>
-#include <iostream>
-using namespace std;
+#ifndef ENEMY_HPP
+#define ENEMY_HPP
 
+#include "raylib.h"
 
+struct Enemy {
+    Vector2 position;
+    Vector2 size;
+    Color color;
+};
 
 #endif
