@@ -3,20 +3,18 @@
 #include "Game/game.hpp"
 
 int main() {
-    // Initialization
+
     Map gameMap = LoadMapFromFile("Saves/map.txt");
     if (gameMap.grid.empty()) {
-        return -1; // Exit if map failed to load
+        return -1;
     }
 
-    // Calculate the required window size based on the map dimensions
     int windowWidth = gameMap.width * CELL_SIZE;
     int windowHeight = gameMap.height * CELL_SIZE;
     
     InitWindow(windowWidth, windowHeight, "CE2103");
     SetTargetFPS(60);
 
-    // Create player at the start position
     Enemy player = {
         {(float)gameMap.start.x * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2, 
          (float)gameMap.start.y * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2},
@@ -24,20 +22,16 @@ int main() {
         PLAYER_COLOR
     };
 
-    // Main game loop
     while (!WindowShouldClose()) {
-        // Update
         UpdateEnemy(player, gameMap);
 
-        // Check win condition
         if (CheckWinCondition(player, gameMap)) {
             DrawText("You Win!", windowWidth / 2 - 100, windowHeight / 2 - 20, 40, GREEN);
             EndDrawing();
-            WaitTime(2); // Show win message for 2 seconds
+            WaitTime(2);
             break;
         }
 
-        // Draw
         BeginDrawing();
         ClearBackground(BLACK);
         
@@ -47,7 +41,7 @@ int main() {
         EndDrawing();
     }
 
-    // Cleanup
+    UnloadAllTextures();
     CloseWindow();
     return 0;
 }

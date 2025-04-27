@@ -23,6 +23,9 @@ Map LoadMapFromFile(const char* fileName) {
                 case '#': // Wall
                     row.push_back(1);
                     break;
+                case '$':
+                    row.push_back(2);
+                    break;
                 case ' ': // Path
                     row.push_back(0);
                     break;
@@ -57,12 +60,16 @@ Map LoadMapFromFile(const char* fileName) {
 }
 
 void DrawMap(const Map& map) {
+    InitTextures();
+
     for (int y = 0; y < map.height; y++) {
         for (int x = 0; x < map.width; x++) {
             Rectangle cell = {(float)x * CELL_SIZE, (float)y * CELL_SIZE, (float)CELL_SIZE, (float)CELL_SIZE};
             
             if (map.grid[y][x] == 1) {
                 DrawRectangleRec(cell, WALL_COLOR);
+            } else if (map.grid[y][x] == 2) {
+                DrawTexturePro(GameTextures::ground, { 16, 0, 16, 16 }, cell, {0.0f, 0.0f}, 0.0f, WHITE);
             } else {
                 DrawRectangleRec(cell, PATH_COLOR);
                 
