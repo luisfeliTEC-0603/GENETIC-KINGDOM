@@ -4,10 +4,12 @@
 #include <vector>
 #include "raylib.h"
 
-struct Map {
+struct Map { // Represents the map
     std::vector<std::vector<int>> grid;
     Vector2 start;
     Vector2 goal;
+
+    // Unitary Dimensions
     int width;
     int height;
 };

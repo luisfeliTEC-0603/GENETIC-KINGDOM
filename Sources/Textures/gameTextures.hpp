@@ -3,13 +3,15 @@
 
 #include "raylib.h"
 
-namespace GameTextures
+namespace GameTextures // Available Textures
 {
     extern Texture2D ground;
 }
 
+// Constant Parameters 
 const int CELL_SIZE = 16;
 const int PLAYER_SIZE = 12;
+
 const Color WALL_COLOR = DARKGRAY;
 const Color PATH_COLOR = RAYWHITE;
 const Color PLAYER_COLOR = RED;

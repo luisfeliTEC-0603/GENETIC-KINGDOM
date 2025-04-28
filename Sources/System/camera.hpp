@@ -6,6 +6,7 @@
 
 #include "../Game/game.hpp"
 
+// RayLib Camara Related Functionalities
 struct CameraController {
     Camera2D camera;
     float minZoom;
@@ -16,5 +17,7 @@ struct CameraController {
     void ClampToMap(const Map& gameMap);
     float GetCameraZoom();
 };
+
+Vector2 GetMouseCell(const Camera2D& camera, const Map& map);
 
 #endif

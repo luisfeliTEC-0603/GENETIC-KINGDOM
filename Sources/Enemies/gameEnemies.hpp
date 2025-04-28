@@ -16,6 +16,7 @@ struct Enemy {
     Vector2 position;
     Vector2 size;
     Color color;
+    float speed; 
 };
 
 #endif

@@ -4,7 +4,7 @@
 void UpdateEnemy(Enemy& enemy, const Map& map) {
     Vector2 newPosition = enemy.position;
     Vector2 velocity = {0, 0};
-    float speed = 5.0f;
+    float speed = enemy.speed;
     
     // Get input
     if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) velocity.x = speed;
