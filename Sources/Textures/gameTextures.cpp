@@ -1,6 +1,9 @@
 #include "gameTextures.hpp"
 
 Texture2D GameTextures::ground;
+Texture2D GameTextures::whizardTowerBase;
+Texture2D GameTextures::whizardForTower;
+
 
 void InitTextures(){
 
@@ -10,5 +13,7 @@ void InitTextures(){
 }
 void UnloadAllTextures(){
 
+    UnloadTexture(GameTextures::whizardTowerBase);
+    UnloadTexture(GameTextures::whizardForTower);
     UnloadTexture(GameTextures::ground);
 }

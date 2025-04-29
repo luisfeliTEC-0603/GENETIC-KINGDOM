@@ -1,6 +1,10 @@
 #include "raylib.h"
 #include "rlgl.h"
 #include "raymath.h"
+#include <vector>
+
+std::vector<int> numeros;
+
 
 #include "Game/game.hpp"
 #include "System/camera.hpp"
@@ -10,6 +14,10 @@ int main() {
     // Initialization
     const int screenWidth = 1280;
     const int screenHeight = 640;
+
+    // Vector with towers that are on map
+
+    std::vector<std::vector<int>> towersInfo = {}; // {[xpos, ypos, type]}
     
     InitWindow(screenWidth, screenHeight, "CE2103");
     
@@ -60,6 +68,9 @@ int main() {
 
             // Access to cell info:
             cellValue = gameMap.grid[(int)mouseCell.y][(int)mouseCell.x];
+            if (cellValue == 1) {
+                towersInfo.push_back({(int)mouseCell.x,(int)mouseCell.y,1}); // at this moment all towers are whizards
+            }
         }
 
         // Graphics-----
@@ -72,6 +83,9 @@ int main() {
 
                 DrawMap(gameMap);
                 DrawRectangleV(player.position, player.size, player.color);
+                for (int i = 0; i < (int)towersInfo.size(); i++) {
+                    DrawWhizardTower(gameMap, towersInfo[i][0], towersInfo[i][1]);
+                }
 
             EndMode2D();
 

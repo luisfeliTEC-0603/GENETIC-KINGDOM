@@ -16,6 +16,6 @@ struct Map { // Represents the map
 
 Map LoadMapFromSaves(const char* fileName);
 void DrawMap(const Map& map);
-void DrawWhizardTower (const Map& map);
+void DrawWhizardTower(const Map& map, int x, int y);
 
 #endif

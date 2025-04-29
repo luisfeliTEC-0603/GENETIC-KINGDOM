@@ -103,3 +103,16 @@ void DrawMap(const Map& map) { // Renders Map
         }
     }
 }
+
+void DrawWhizardTower(const Map& map, int x, int y) {
+
+    Rectangle cell = {(float)x * CELL_SIZE, (float)y * CELL_SIZE, 
+        (float)CELL_SIZE, (float)CELL_SIZE}; // Respective Cell
+
+    DrawTexturePro(GameTextures::whizardTowerBase, { 0,8, CELL_SIZE, CELL_SIZE }, 
+        cell, {0.0f, 0.0f}, 0.0f, WHITE);
+
+    DrawTexturePro(GameTextures::whizardForTower, { 353, 193, CELL_SIZE, CELL_SIZE }, 
+        cell, {0.0f, 0.0f}, 0.0f, WHITE);
+
+}
