@@ -104,15 +104,53 @@ void DrawMap(const Map& map) { // Renders Map
     }
 }
 
-void DrawTower(const Map& map, int x, int y) {
+void DrawTower(const Map& map, int x, int y, int type) {
+    if (type == 1) {
+        DrawArcher(x,y);
+    } 
 
+    if (type == 2) {
+        DrawWhizard(x,y);
+    } 
+
+    if (type == 3) {
+        DrawArtillery(x,y);
+    } 
+
+}
+
+void DrawArcher(int x, int y) {
+
+    Rectangle cell = {(float)x * CELL_SIZE, (float)y * CELL_SIZE, 
+        (float)CELL_SIZE, (float)CELL_SIZE}; // Respective Cell
+
+    DrawTexturePro(GameTextures::archerTowerBase, { 0,5, CELL_SIZE, CELL_SIZE }, 
+        cell, {0.0f, 0.0f}, 0.0f, WHITE);
+
+    DrawTexturePro(GameTextures::archerForTower, { 353, 50, CELL_SIZE, CELL_SIZE }, 
+        cell, {0.0f, 0.0f}, 0.0f, WHITE);
+
+
+}
+
+void DrawWhizard(int x, int y){
     Rectangle cell = {(float)x * CELL_SIZE, (float)y * CELL_SIZE, 
         (float)CELL_SIZE, (float)CELL_SIZE}; // Respective Cell
 
     DrawTexturePro(GameTextures::whizardTowerBase, { 0,8, CELL_SIZE, CELL_SIZE }, 
         cell, {0.0f, 0.0f}, 0.0f, WHITE);
 
-    DrawTexturePro(GameTextures::whizardForTower, { 353, 193, CELL_SIZE, CELL_SIZE }, 
+    DrawTexturePro(GameTextures::whizardForTower, { 352, 193, CELL_SIZE, CELL_SIZE }, 
         cell, {0.0f, 0.0f}, 0.0f, WHITE);
+
+}
+
+void DrawArtillery(int x, int y) {
+    Rectangle cell = {(float)x * CELL_SIZE, (float)y * CELL_SIZE, 
+        (float)CELL_SIZE, (float)CELL_SIZE}; // Respective Cell
+
+    DrawTexturePro(GameTextures::artilleryTowerBase, { 240,192, CELL_SIZE, CELL_SIZE }, 
+        cell, {0.0f, 0.0f}, 0.0f, WHITE);
+
 
 }

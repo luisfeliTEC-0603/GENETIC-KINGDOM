@@ -8,6 +8,9 @@ namespace GameTextures // Available Textures
     extern Texture2D ground;
     extern Texture2D whizardTowerBase;
     extern Texture2D whizardForTower;
+    extern Texture2D archerForTower;
+    extern Texture2D archerTowerBase;
+    extern Texture2D artilleryTowerBase;
 }
 
 // Constant Parameters 
