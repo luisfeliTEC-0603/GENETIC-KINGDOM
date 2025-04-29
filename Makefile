@@ -5,7 +5,7 @@ CC = g++
 TARGET = game
 
 # Source file(s)
-SRC = Sources/main.cpp Sources/Game/game.cpp Sources/Level/gameLevel.cpp Sources/Textures/gameTextures.cpp Sources/System/camera.cpp
+SRC = Sources/main.cpp Sources/Game/game.cpp Sources/Level/gameLevel.cpp Sources/Textures/gameTextures.cpp Sources/System/camera.cpp Sources/TowerSelectionScreen/towerSelection.cpp
 
 # Compiler flags
 CXXFLAGS = -Wall -std=c++17

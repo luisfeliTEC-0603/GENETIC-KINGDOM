@@ -104,7 +104,7 @@ void DrawMap(const Map& map) { // Renders Map
     }
 }
 
-void DrawWhizardTower(const Map& map, int x, int y) {
+void DrawTower(const Map& map, int x, int y) {
 
     Rectangle cell = {(float)x * CELL_SIZE, (float)y * CELL_SIZE, 
         (float)CELL_SIZE, (float)CELL_SIZE}; // Respective Cell

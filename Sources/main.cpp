@@ -53,6 +53,7 @@ int main() {
 
         // Game logic-----
         UpdateEnemy(player, gameMap);
+        bool showTowerMenu = false;
 
         // Check Collision
         if (CheckWinCondition(player, gameMap)) {
@@ -69,7 +70,7 @@ int main() {
             // Access to cell info:
             cellValue = gameMap.grid[(int)mouseCell.y][(int)mouseCell.x];
             if (cellValue == 1) {
-                towersInfo.push_back({(int)mouseCell.x,(int)mouseCell.y,1}); // at this moment all towers are whizards
+                showTowerMenu = true;
             }
         }
 
@@ -84,10 +85,32 @@ int main() {
                 DrawMap(gameMap);
                 DrawRectangleV(player.position, player.size, player.color);
                 for (int i = 0; i < (int)towersInfo.size(); i++) {
-                    DrawWhizardTower(gameMap, towersInfo[i][0], towersInfo[i][1]);
+                    DrawTower(gameMap, towersInfo[i][0], towersInfo[i][1], towersInfo[i][2]);
+                }
+
+                if (showTowerMenu) {
+                    int result = ShowScreen();
+                    if (result != 0) {
+                        // Aquí haces lo que necesites con el botón presionado
+                        if (result == 1) {
+                            towersInfo.push_back({(int)mouseCell.x,(int)mouseCell.y,1});
+                            // Archer Tower  
+                        } else if (result == 2) {
+                            towersInfo.push_back({(int)mouseCell.x,(int)mouseCell.y,2});
+                            // Whizar Tower
+                        } else if (result == 3) {
+                            towersInfo.push_back({(int)mouseCell.x,(int)mouseCell.y,3});
+                            // Artillery Tower
+                        } else if (result == 4) {
+                            // Cancel logic
+                        }
+                        showTowerMenu = false;
+                    }
                 }
 
             EndMode2D();
+
+
 
             // Data Collection-----
             DrawCircleV(GetMousePosition(), 4, DARKGRAY); // Exact Mouse Position
