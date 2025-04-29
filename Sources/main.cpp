@@ -15,13 +15,13 @@ int main() {
     
     SetTargetFPS(60); // Set FPS
 
-    Map gameMap = LoadMapFromFile("Saves/map.txt"); // Acces Saved Files
+    Map gameMap = LoadMapFromSaves("Saves/map.txt"); // Access Saved Files
     if (gameMap.grid.empty()) {
         CloseWindow();
         return -1;
     }
 
-    // Initialize Camara -> System/camera.hpp
+    // Initialize Camera -> System/camera.hpp
     CameraController cameraController;
     cameraController.Initialize(screenWidth, screenHeight, gameMap);
 
@@ -33,7 +33,7 @@ int main() {
         PLAYER_COLOR, 2.0f
     };
 
-    // Type info varible <Set in Right Click>
+    // Type info variable <Set in Right Click>
     int cellValue = -1;
 
     // Game Loop
@@ -46,7 +46,7 @@ int main() {
         // Game logic-----
         UpdateEnemy(player, gameMap);
 
-        // Check Collition
+        // Check Collision
         if (CheckWinCondition(player, gameMap)) {
             BeginDrawing();
                 ClearBackground(BLACK);
@@ -67,7 +67,7 @@ int main() {
 
             ClearBackground(BLACK);
             
-            // Sets Camara in 2D Mode
+            // Sets Camera in 2D Mode
             BeginMode2D(cameraController.camera);
 
                 DrawMap(gameMap);
@@ -75,9 +75,9 @@ int main() {
 
             EndMode2D();
 
-            // Data Colection-----
+            // Data Collection-----
             DrawCircleV(GetMousePosition(), 4, DARKGRAY); // Exact Mouse Position
-
+            
             DrawTextEx(GetFontDefault(), TextFormat("pxls [%i, %i]", GetMouseX(), GetMouseY()), 
                 Vector2Add(GetMousePosition(), (Vector2){ -44, -24 }), 20, 2, RED); // Data : Mouse Coords
 

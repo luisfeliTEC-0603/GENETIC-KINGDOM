@@ -5,7 +5,7 @@
 
 #include "../Textures/gameTextures.hpp"
 
-Map LoadMapFromFile(const char* fileName) {
+Map LoadMapFromSaves(const char* fileName) {
     Map map; // Map -> gameLevel.hpp
     std::ifstream file(fileName); // Open file in the current directory
     

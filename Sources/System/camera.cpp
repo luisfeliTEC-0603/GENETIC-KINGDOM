@@ -2,7 +2,7 @@
 
 void CameraController::Initialize(int screenWidth, int screenHeight, const Map& gameMap) {
     camera = { 0 };
-    camera.target = { // Centerse the camara in target
+    camera.target = { // Center the camera in target
         (gameMap.width * CELL_SIZE) / 2.0f,
         (gameMap.height * CELL_SIZE) / 2.0f
     };
@@ -26,7 +26,7 @@ void CameraController::Update(const Map& gameMap) {
         camera.target = Vector2Add(camera.target, delta);
     }
 
-    // Zoom with MousWheel
+    // Zoom with MouseWheel
     float wheel = GetMouseWheelMove();
     if (wheel != 0) {
         Vector2 mouseWorldPos = GetScreenToWorld2D(GetMousePosition(), camera);
@@ -39,7 +39,7 @@ void CameraController::Update(const Map& gameMap) {
     ClampToMap(gameMap);
 }
 
-void CameraController::ClampToMap(const Map& gameMap) { // Limits Stablishment for Drag Movement
+void CameraController::ClampToMap(const Map& gameMap) { // Limits Stableshment for Drag Movement
 
     // Full Map Dimensions
     float mapWidth = gameMap.width * CELL_SIZE;

@@ -6,7 +6,7 @@
 
 #include "../Game/game.hpp"
 
-// RayLib Camara Related Functionalities
+// RayLib camera Related Functionalities
 struct CameraController {
     Camera2D camera;
     float minZoom;

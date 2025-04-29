@@ -14,7 +14,7 @@ struct Map { // Represents the map
     int height;
 };
 
-Map LoadMapFromFile(const char* fileName);
+Map LoadMapFromSaves(const char* fileName);
 void DrawMap(const Map& map);
 
 #endif
