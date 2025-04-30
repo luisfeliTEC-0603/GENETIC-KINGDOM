@@ -2,12 +2,19 @@
 #include "rlgl.h"
 #include "raymath.h"
 #include <vector>
+#include <iostream>
 
-std::vector<int> numeros;
 
 
 #include "Game/game.hpp"
 #include "System/camera.hpp"
+
+// Towers
+#include "Tower/tower.hpp"
+#include "Tower/archer.hpp"
+#include "Tower/artillery.hpp"
+#include "Tower/whizard.hpp"
+
 
 int main() {
 
@@ -17,7 +24,7 @@ int main() {
 
     // Vector with towers that are on map
 
-    std::vector<std::vector<int>> towersInfo = {}; // {[xpos, ypos, type]}
+    vector<Tower*> towers = {};
     
     InitWindow(screenWidth, screenHeight, "CE2103");
     
@@ -84,8 +91,8 @@ int main() {
 
                 DrawMap(gameMap);
                 DrawRectangleV(player.position, player.size, player.color);
-                for (int i = 0; i < (int)towersInfo.size(); i++) {
-                    DrawTower(gameMap, towersInfo[i][0], towersInfo[i][1], towersInfo[i][2]);
+                for (int i = 0; i < (int)towers.size(); i++) {
+                    DrawTower(gameMap, towers[i]->getXpos(), towers[i]->getYpos(), towers[i]->getType());
                 }
 
                 if (showTowerMenu) {
@@ -93,13 +100,13 @@ int main() {
                     if (result != 0) {
                         // Aquí haces lo que necesites con el botón presionado
                         if (result == 1) {
-                            towersInfo.push_back({(int)mouseCell.x,(int)mouseCell.y,1});
+                            towers.push_back(new ArcherTower((int)mouseCell.x, (int)mouseCell.y, 5, 2, 7, 4, 1, 1));
                             // Archer Tower  
                         } else if (result == 2) {
-                            towersInfo.push_back({(int)mouseCell.x,(int)mouseCell.y,2});
+                            towers.push_back(new WhizardTower((int)mouseCell.x, (int)mouseCell.y, 7, 1, 5, 5, 1, 2));
                             // Whizar Tower
                         } else if (result == 3) {
-                            towersInfo.push_back({(int)mouseCell.x,(int)mouseCell.y,3});
+                            towers.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 10, 2, 3, 5, 2, 3));
                             // Artillery Tower
                         } else if (result == 4) {
                             // Cancel logic
