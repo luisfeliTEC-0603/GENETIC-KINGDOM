@@ -1,6 +1,6 @@
-#include "archer.h"
+#include "archer.hpp"
 
-ArcherTower :: ArcherTower(int xpos, int ypos, int damage, int speed, int scope, int regTime, int reloadTime, int type, string imageDir) : Tower (xpos, ypos, damage, speed, scope, regTime, reloadTime, type, imageDir) {}
+ArcherTower :: ArcherTower(int xpos, int ypos, int damage, int speed, int scope, int regTime, int reloadTime, int type) : Tower (xpos, ypos, damage, speed, scope, regTime, reloadTime, type) {}
 
 void ArcherTower :: Upgrade1() {
     int actDamage =  this->getDamage(); 

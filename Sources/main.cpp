@@ -1,15 +1,34 @@
 #include "raylib.h"
 #include "rlgl.h"
 #include "raymath.h"
+#include <vector>
+#include <iostream>
+
+
 
 #include "Game/game.hpp"
 #include "System/camera.hpp"
+
+// Towers
+#include "Tower/tower.hpp"
+#include "Tower/archer.hpp"
+#include "Tower/artillery.hpp"
+#include "Tower/whizard.hpp"
+
 
 int main() {
 
     // Initialization
     const int screenWidth = 1280;
     const int screenHeight = 640;
+
+    // Game objects
+    // Vector with towers that are on map
+
+    vector<Tower*> towers = {};
+
+    // Currency of the game
+    Coins coins;
     
     InitWindow(screenWidth, screenHeight, "CE2103");
     
@@ -45,6 +64,7 @@ int main() {
 
         // Game logic-----
         UpdateEnemy(player, gameMap);
+        bool showTowerMenu = false;
 
         // Check Collision
         if (CheckWinCondition(player, gameMap)) {
@@ -60,6 +80,9 @@ int main() {
 
             // Access to cell info:
             cellValue = gameMap.grid[(int)mouseCell.y][(int)mouseCell.x];
+            if (cellValue == 1) {
+                showTowerMenu = true;
+            }
         }
 
         // Graphics-----
@@ -72,8 +95,36 @@ int main() {
 
                 DrawMap(gameMap);
                 DrawRectangleV(player.position, player.size, player.color);
+                for (int i = 0; i < (int)towers.size(); i++) {
+                    DrawTower(gameMap, towers[i]->getXpos(), towers[i]->getYpos(), towers[i]->getType());
+                }
+
+                if (showTowerMenu) {
+                    int result = ShowScreen();
+                    if (result != 0) {
+                        // Aquí haces lo que necesites con el botón presionado
+                        if (result == 1) {
+                            coins.decreasCoins(10);
+                            towers.push_back(new ArcherTower((int)mouseCell.x, (int)mouseCell.y, 5, 2, 7, 4, 1, 1));
+                            // Archer Tower  
+                        } else if (result == 2) {
+                            coins.decreasCoins(10);
+                            towers.push_back(new WhizardTower((int)mouseCell.x, (int)mouseCell.y, 7, 1, 5, 5, 1, 2));
+                            // Whizar Tower
+                        } else if (result == 3) {
+                            coins.decreasCoins(10);
+                            towers.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 10, 2, 3, 5, 2, 3));
+                            // Artillery Tower
+                        } else if (result == 4) {
+                            // Cancel logic
+                        }
+                        showTowerMenu = false;
+                    }
+                }
 
             EndMode2D();
+
+
 
             // Data Collection-----
             DrawCircleV(GetMousePosition(), 4, DARKGRAY); // Exact Mouse Position

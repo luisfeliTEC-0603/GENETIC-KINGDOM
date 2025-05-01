@@ -27,6 +27,7 @@ ataque alto
 
 #include <string>
 #include <iostream>
+
 using namespace std;
 
 class Tower {
@@ -39,14 +40,12 @@ private:
     int regTime;
     int reloadTime;
     int type; //type = 1 arqueros, type = 2 magos, type = 3 artilleros
-    string imageDir; // direccion de imagen asociada
 
 public:
-    Tower (int xpos, int ypos, int damage, int speed, int scope, int regTime, int reloadTime, int type, string imageDir);
+    Tower (int xpos, int ypos, int damage, int speed, int scope, int regTime, int reloadTime, int type);
     virtual void Upgrade1 ();
     virtual void Upgrade2 ();
     virtual void Upgrade3 ();
-    virtual ~Tower() {} // destructor
 
     //Getters and setters for the upgrades
     // Getters
@@ -58,7 +57,6 @@ public:
     int getType() const { return type; }
     int getXpos() const { return xpos; }
     int getYpos() const { return ypos; }
-    string getImageDir() const { return imageDir; }
 
     // Setters
     void setDamage(int d) { damage = d; }
@@ -67,7 +65,6 @@ public:
     void setRegTime(int rt) { regTime = rt; }
     void setReloadTime(int rlt) { reloadTime = rlt; }
     void setType(int t) { type = t; }
-    void setImageDir(const string& dir) { imageDir = dir; }
 
 };
 

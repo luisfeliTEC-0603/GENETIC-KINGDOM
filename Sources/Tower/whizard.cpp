@@ -1,6 +1,6 @@
-#include "whizard.h"
+#include "whizard.hpp"
 
-WhizardTower :: WhizardTower(int xpos, int ypos, int damage, int speed, int scope, int regTime, int reloadTime, int type, string imageDir) : Tower (xpos, ypos, damage, speed, scope, regTime, reloadTime, type, imageDir) {}
+WhizardTower :: WhizardTower(int xpos, int ypos, int damage, int speed, int scope, int regTime, int reloadTime, int type) : Tower (xpos, ypos, damage, speed, scope, regTime, reloadTime, type) {}
 
 void WhizardTower :: Upgrade1() {
     int actDamage =  this->getDamage(); 
