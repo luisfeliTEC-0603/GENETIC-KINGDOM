@@ -1,5 +1,6 @@
 #include "game.hpp"
 #include "raylib.h"
+// #include "Pathfinding/aStar.cpp"
 
 void UpdateEnemy(Enemy& enemy, const Map& map) {
     Vector2 newPosition = enemy.position;

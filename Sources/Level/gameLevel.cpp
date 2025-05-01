@@ -9,7 +9,7 @@ Map LoadMapFromSaves(const char* fileName) {
     Map map; // Map -> gameLevel.hpp
     std::ifstream file(fileName); // Open file in the current directory
     
-    if (!file.is_open()) { // Check if the file was open succesfully
+    if (!file.is_open()) { // Check if the file was open successfully
         TraceLog(LOG_ERROR, "Failed to open map file");
         return map;
     }
@@ -110,13 +110,12 @@ void DrawTower(const Map& map, int x, int y, int type) {
     } 
 
     if (type == 2) {
-        DrawWhizard(x,y);
+        DrawWizard(x,y);
     } 
 
     if (type == 3) {
         DrawArtillery(x,y);
     } 
-
 }
 
 void DrawArcher(int x, int y) {
@@ -129,11 +128,10 @@ void DrawArcher(int x, int y) {
 
     DrawTexturePro(GameTextures::archerForTower, { 353, 50, CELL_SIZE, CELL_SIZE }, 
         cell, {0.0f, 0.0f}, 0.0f, WHITE);
-
-
 }
 
-void DrawWhizard(int x, int y){
+void DrawWizard(int x, int y){
+
     Rectangle cell = {(float)x * CELL_SIZE, (float)y * CELL_SIZE, 
         (float)CELL_SIZE, (float)CELL_SIZE}; // Respective Cell
 
@@ -142,7 +140,6 @@ void DrawWhizard(int x, int y){
 
     DrawTexturePro(GameTextures::whizardForTower, { 352, 193, CELL_SIZE, CELL_SIZE }, 
         cell, {0.0f, 0.0f}, 0.0f, WHITE);
-
 }
 
 void DrawArtillery(int x, int y) {
@@ -151,6 +148,4 @@ void DrawArtillery(int x, int y) {
 
     DrawTexturePro(GameTextures::artilleryTowerBase, { 240,192, CELL_SIZE, CELL_SIZE }, 
         cell, {0.0f, 0.0f}, 0.0f, WHITE);
-
-
 }

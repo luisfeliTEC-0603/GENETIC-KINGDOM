@@ -6,11 +6,11 @@ void CameraController::Initialize(int screenWidth, int screenHeight, const Map& 
         (gameMap.width * CELL_SIZE) / 2.0f,
         (gameMap.height * CELL_SIZE) / 2.0f
     };
-    camera.offset = { screenWidth/2.0f, screenHeight/2.0f };
+    camera.offset = { screenWidth / 2.0f, screenHeight / 2.0f };
     camera.zoom = 2.5f; // Initial zoom
 
     // Limits based on Map : Empiric
-    minZoom = 0.5f;
+    minZoom = 0.8f;
     maxZoom = 4.0f;
 }
 

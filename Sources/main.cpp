@@ -124,8 +124,6 @@ int main() {
 
             EndMode2D();
 
-
-
             // Data Collection-----
             DrawCircleV(GetMousePosition(), 4, DARKGRAY); // Exact Mouse Position
             

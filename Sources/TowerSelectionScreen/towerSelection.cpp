@@ -17,7 +17,7 @@ int ShowScreen() {
         DrawText("Archer Tower", button1.x + 10, button1.y + 5, 20, BLACK);
 
         DrawRectangleRec(button2, LIGHTGRAY);
-        DrawText("Whizard Tower", button2.x + 10, button2.y + 5, 20, BLACK);
+        DrawText("Wizard Tower", button2.x + 10, button2.y + 5, 20, BLACK);
 
         DrawRectangleRec(button3, LIGHTGRAY);
         DrawText("Artillery Tower", button3.x + 10, button3.y + 5, 20, BLACK);
@@ -36,6 +36,6 @@ int ShowScreen() {
         }
     }
 
-    return 0; // Por si se cierra la ventana
+    return 0;
 }
 
