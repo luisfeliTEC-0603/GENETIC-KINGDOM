@@ -27,6 +27,12 @@ int main() {
 
     vector<Tower*> towers = {};
 
+    // Vector with Enemies deployed on game map
+    vector<Enemy> enemys = {};
+
+    // Vector with current bullets on map
+    vector<Bullet> bullets;
+
     // Currency of the game
     Coins coins;
     
@@ -51,6 +57,7 @@ int main() {
         {(float)PLAYER_SIZE, (float)PLAYER_SIZE},
         PLAYER_COLOR, 2.0f
     };
+    enemys.push_back(player); // This must be deleted since it is used for example. 
 
     // Type info variable <Set in Right Click>
     int cellValue = -1;
@@ -85,6 +92,14 @@ int main() {
             }
         }
 
+        for (int i = (int)bullets.size() - 1; i >= 0; i--) {
+            if (bullets[i].position.x < 0 || bullets[i].position.x > screenWidth ||
+                bullets[i].position.y < 0 || bullets[i].position.y > screenHeight) {
+                bullets.erase(bullets.begin() + i);
+            }
+        }
+        
+
         // Graphics-----
         BeginDrawing();
 
@@ -97,6 +112,7 @@ int main() {
                 DrawRectangleV(player.position, player.size, player.color);
                 for (int i = 0; i < (int)towers.size(); i++) {
                     DrawTower(gameMap, towers[i]->getXpos(), towers[i]->getYpos(), towers[i]->getType());
+                    towers[i]->CheckIfEnemyesInRange(enemys, bullets);
                 }
 
                 if (showTowerMenu) {
@@ -122,6 +138,15 @@ int main() {
                     }
                 }
 
+                for (int i = 0; i < (int)bullets.size(); i++) {
+                    bullets[i].position.x += bullets[i].direction.x * bullets[i].speed;
+                    bullets[i].position.y += bullets[i].direction.y * bullets[i].speed;
+                
+                    // Draw bullets
+                    DrawCircleV(bullets[i].position, 3, RED);
+                
+                }
+
             EndMode2D();
 
             // Data Collection-----
@@ -136,7 +161,7 @@ int main() {
             DrawTextEx(GetFontDefault(), TextFormat("cell [%i, %i]", (int)mouseCell.x, (int)mouseCell.y), 
                 Vector2Add(GetMousePosition(), (Vector2){ -44, 24 }), 20, 2, RED); // Data : Mouse in Cell
 
-            DrawTextEx(GetFontDefault(), TextFormat("cell-info [%i]", cellValue), 
+            DrawTextEx(GetFontDefault(), TextFormat("cell-info [%i]", (int)bullets.size()), 
                 Vector2Add(GetMousePosition(), (Vector2){ -44, 48 }), 20, 2, RED); // Data : Mouse in Cell
 
         EndDrawing();

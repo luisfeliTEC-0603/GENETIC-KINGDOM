@@ -27,8 +27,21 @@ ataque alto
 
 #include <string>
 #include <iostream>
+#include <vector>
+#include "../Enemies/gameEnemies.hpp"
 
 using namespace std;
+
+struct Bullet {
+    Vector2 position;
+    Vector2 direction;
+    float speed;
+    int damage;
+
+    Bullet(Vector2 pos, Vector2 dir, float spd, int dmg)
+        : position(pos), direction(dir), speed(spd), damage(dmg) {}
+};
+
 
 class Tower {
 private:
@@ -46,6 +59,9 @@ public:
     virtual void Upgrade1 ();
     virtual void Upgrade2 ();
     virtual void Upgrade3 ();
+    virtual void CheckIfEnemyesInRange(const vector<Enemy>& enemies, vector<Bullet>& bulletList);
+    virtual void ShootEnemy(const Enemy& enemy, vector<Bullet>& bulletList);
+
 
     //Getters and setters for the upgrades
     // Getters

@@ -22,4 +22,7 @@ void UnloadAllTextures(){
     UnloadTexture(GameTextures::whizardTowerBase);
     UnloadTexture(GameTextures::whizardForTower);
     UnloadTexture(GameTextures::ground);
+    UnloadTexture(GameTextures::archerForTower);
+    UnloadTexture(GameTextures::archerTowerBase);
+    UnloadTexture(GameTextures::artilleryTowerBase);
 }
