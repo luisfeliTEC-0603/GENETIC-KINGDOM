@@ -22,9 +22,13 @@ int main() {
     const int screenWidth = 1280;
     const int screenHeight = 640;
 
+    // Game objects
     // Vector with towers that are on map
 
     vector<Tower*> towers = {};
+
+    // Currency of the game
+    Coins coins;
     
     InitWindow(screenWidth, screenHeight, "CE2103");
     
@@ -100,12 +104,15 @@ int main() {
                     if (result != 0) {
                         // Aquí haces lo que necesites con el botón presionado
                         if (result == 1) {
+                            coins.decreasCoins(10);
                             towers.push_back(new ArcherTower((int)mouseCell.x, (int)mouseCell.y, 5, 2, 7, 4, 1, 1));
                             // Archer Tower  
                         } else if (result == 2) {
+                            coins.decreasCoins(10);
                             towers.push_back(new WhizardTower((int)mouseCell.x, (int)mouseCell.y, 7, 1, 5, 5, 1, 2));
                             // Whizar Tower
                         } else if (result == 3) {
+                            coins.decreasCoins(10);
                             towers.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 10, 2, 3, 5, 2, 3));
                             // Artillery Tower
                         } else if (result == 4) {
