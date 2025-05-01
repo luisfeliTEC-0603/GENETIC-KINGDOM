@@ -1,45 +1,58 @@
 import random
 
-def newGrid(width, height):
+def newMap(width, height):
     return [['#' for _ in range(width)] for _ in range(height)]
 
-def generate_path(grid, start_x, start_y, goal_x, goal_y, path_width):
+def newPath(grid, start_x, start_y, goal_x, goal_y):
     directions = [(0, 1), (1, 0), (0, -1), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1)]
     x, y = start_x, start_y
 
-    # Randomly carve paths towards the goal
-    while (x != goal_x or y != goal_y):
+    attempt = 0
+    attempt_max = 100
 
-        # Randomize direction
+    # Randomly carve paths towards the goal
+    while (x != goal_x or y != goal_y) and (attempt < attempt_max):
         random.shuffle(directions)
         path = False
+        path_width = random.randint(1, 2)
         
         for dx, dy in directions:
-            # Carve a path in the direction of the selected move
             nx, ny = x + dx, y + dy
             
-            # Ensure we're within bounds and not at a wall
+            # Ensure limits
             if 0 <= nx < len(grid[0]) and 0 <= ny < len(grid) and grid[ny][nx] == '#':
                 # Carve path (expand width)
                 for i in range(-path_width // 2, path_width // 2 + 1):
                     if 0 <= nx + i < len(grid[0]) and 0 <= ny + i < len(grid):
                         grid[ny + i][nx] = ' '
                         grid[ny][nx + i] = ' '
+
                 # Move to next position
                 x, y = nx, ny
                 path = True
                 break
-
-        # Couldn't find a viable path
+        
         if not path:
-            break
-
+            attempt +=1
+    
     return grid
 
-def add_goal(grid, goal_x, goal_y):
-    grid[goal_y][goal_x] = 'G'
+def AddGoal(grid, goal):
 
-def save_grid_to_file(grid, filename):
+    # Check Acceptable Dimensions between Matrixes 
+    if len(grid) < len(goal) or len(grid[0]) < len(goal[0]):
+        return
+    
+    # Coordinates to Redraw the Grid
+    start_y = (len(grid) - len(goal)) // 2
+    start_x = (len(grid[0]) - len(goal)) // 2
+
+    # Redrawing
+    for y in range(len(goal)):
+        for x in range(len(goal[0])):
+            grid[start_y + y][start_x + x] = goal[y][x] 
+
+def SaveFIle(grid, filename):
     with open(filename, 'w') as f:
         for row in grid:
             f.write("".join(row) + "\n")
@@ -47,29 +60,35 @@ def save_grid_to_file(grid, filename):
 def main():
 
     # General Grid Parameters
-    width = 208
-    height = 96
+    width = 100
+    height = 50
+    goal_x = width // 2
+    goal_y = height // 2
+    numPaths = 35
 
     # Goal Parameters
-    goal_width = int(width * 5 / 100)
+    goal_width = int(width * 10 / 100) + 1
     goal_height = int(height * 10 / 100)
     goal = [[' ' for _ in range(goal_width)] for _ in range(goal_height)]
     goal[goal_height // 2][goal_width // 2] = 'G'
     
     # Generate Grid
-    grid = newGrid(width, height)
+    grid = newMap(width, height)
 
     # Generate paths
-    grid = generate_path(grid, 0, random.randint(0, height-1), goal_x, goal_y)  # From West
-    grid = generate_path(grid, width - 1, random.randint(0, height-1), goal_x, goal_y)  # From East
-    grid = generate_path(grid, random.randint(0, width-1), 0, goal_x, goal_y)  # From North
-    grid = generate_path(grid, random.randint(0, width-1), height - 1, goal_x, goal_y)  # From South
+    grid = newPath(grid, width // 2, 0, goal_x, goal_y)  # From West
+    grid = newPath(grid, 0, height // 2, goal_x, goal_y)  # From East
+    grid = newPath(grid, width - 1, height // 2, goal_x, goal_y)  # From North
+    grid = newPath(grid, width // 2, height - 1, goal_x, goal_y)  # From South
 
-    # Add the goal 'G'
-    add_goal(grid, goal_x, goal_y)
+    for _ in range(numPaths):
+        grid = newPath(grid, random.randint(0, width-1), random.randint(0, height-1), goal_x, goal_y)
+
+    # Add the Goal -exclusively in the middle-
+    AddGoal(grid, goal)
 
     # Save the grid to a file
-    save_grid_to_file(grid, "map.txt")
+    SaveFIle(grid, "map.txt")
 
 if __name__ == "__main__":
     main()

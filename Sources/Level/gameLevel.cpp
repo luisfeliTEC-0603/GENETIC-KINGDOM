@@ -84,12 +84,20 @@ void DrawMap(const Map& map) { // Renders Map
             switch (map.grid[y][x]){
 
             case 0:
-                DrawTexturePro(GameTextures::ground, { 16, 0, CELL_SIZE, CELL_SIZE }, 
+                DrawTexturePro(GameTextures::ground, { 64, 0, CELL_SIZE, CELL_SIZE }, 
                     cell, {0.0f, 0.0f}, 0.0f, WHITE);
                 break;
             
             case 1:
-                DrawRectangleRec(cell, WALL_COLOR);
+                DrawTexturePro(GameTextures::ground, { 32, 0, CELL_SIZE, CELL_SIZE }, 
+                    cell, {0.0f, 0.0f}, 0.0f, WHITE);
+
+                    // 70% Of a Tree Spamming
+                    if (RandomUtils::checkProbability(0.7)) {
+                        DrawTexturePro(GameTextures::tree, { 
+                            RandomUtils::randomFloat(1,3) * 16, 0, CELL_SIZE, CELL_SIZE }, 
+                            cell, {0.0f, 0.0f}, 0.0f, WHITE); 
+                    }
                 break;
             
             default:
@@ -98,7 +106,8 @@ void DrawMap(const Map& map) { // Renders Map
 
             // Draw the Keep
             if (x == (int)map.goal.x && y == (int)map.goal.y) {
-                DrawRectangleRec(cell, GOAL_COLOR);
+                DrawTexturePro(GameTextures::keep, { 0, 0, CELL_SIZE * 2, CELL_SIZE * 2 }, 
+                    cell, {0.0f, 0.0f}, 0.0f, WHITE);
             }
         }
     }
@@ -135,10 +144,10 @@ void DrawWizard(int x, int y){
     Rectangle cell = {(float)x * CELL_SIZE, (float)y * CELL_SIZE, 
         (float)CELL_SIZE, (float)CELL_SIZE}; // Respective Cell
 
-    DrawTexturePro(GameTextures::whizardTowerBase, { 0,8, CELL_SIZE, CELL_SIZE }, 
+    DrawTexturePro(GameTextures::wizardTowerBase, { 0,8, CELL_SIZE, CELL_SIZE }, 
         cell, {0.0f, 0.0f}, 0.0f, WHITE);
 
-    DrawTexturePro(GameTextures::whizardForTower, { 352, 193, CELL_SIZE, CELL_SIZE }, 
+    DrawTexturePro(GameTextures::wizardForTower, { 352, 193, CELL_SIZE, CELL_SIZE }, 
         cell, {0.0f, 0.0f}, 0.0f, WHITE);
 }
 

@@ -4,6 +4,8 @@
 #include <vector>
 #include "raylib.h"
 
+#include "../Utilities/tools.hpp"
+
 struct Map { // Represents the map
     std::vector<std::vector<int>> grid;
     Vector2 start;
