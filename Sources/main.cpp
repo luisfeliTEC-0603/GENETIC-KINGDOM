@@ -26,7 +26,6 @@ int main() {
     // Vector with towers that are on map and towerID to recognize each tower when deletting bullets
 
     vector<Tower*> towers = {};
-    int towerID = 0;
 
     // Vector with Enemies deployed on game map
     vector<Enemy*> enemys = {};
@@ -134,7 +133,6 @@ int main() {
             BeginMode2D(cameraController.camera);
 
                 DrawMap(gameMap);
-
                 // Stuff from sample of enemy 
                 Vector2 pos = player->position;
                 Vector2 size = player->size;
@@ -143,7 +141,7 @@ int main() {
 
                 // Check if an enemy is near each tower.
                 for (int i = 0; i < (int)towers.size(); i++) {
-                    DrawTower(gameMap, towers[i]->getXpos(), towers[i]->getYpos(), towers[i]->getType());
+                    DrawTower(gameMap, towers[i]->getXpos(), towers[i]->getYpos(), towers[i]->getType(), towers[i]->getVision());
                     towers[i]->CheckIfEnemyesInRange(enemys, bullets, deltaTime);
                 }
                 
@@ -154,18 +152,15 @@ int main() {
                         // Aquí haces lo que necesites con el botón presionado
                         if (result == 1) {
                             coins.decreasCoins(10);
-                            towers.push_back(new ArcherTower((int)mouseCell.x, (int)mouseCell.y, 5, 1, 7, 4, 1, 1, towerID));
-                            towerID++;
+                            towers.push_back(new ArcherTower((int)mouseCell.x, (int)mouseCell.y, 5, 2, 7, 4, 1, 1, 1));
                             // Archer Tower  
                         } else if (result == 2) {
                             coins.decreasCoins(10);
-                            towers.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 7, 1, 3, 5, 2, 2, towerID));
-                            towerID++;
+                            towers.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 7, 1, 3, 5, 2, 2, 1));
                             // Whizar Tower
                         } else if (result == 3) {
                             coins.decreasCoins(10);
-                            towers.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 10, 2, 3, 5, 2, 3, towerID));
-                            towerID++;
+                            towers.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 10, 1, 3, 5, 2, 3, 1));
                             // Artillery Tower
                         } else if (result == 4) {
                             // Cnancel
