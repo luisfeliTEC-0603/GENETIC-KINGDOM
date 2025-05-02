@@ -29,7 +29,7 @@ int main() {
     int towerID = 0;
 
     // Vector with Enemies deployed on game map
-    vector<Enemy> enemys = {};
+    vector<Enemy*> enemys = {};
 
     // Vector with current bullets on map
     vector<Bullet> bullets;
@@ -52,12 +52,14 @@ int main() {
     cameraController.Initialize(screenWidth, screenHeight, gameMap);
 
     // Enemy Sample -> gameEnemies.hpp
-    Enemy player = {
-        {(float)gameMap.start.x * CELL_SIZE +32*CELL_SIZE+(CELL_SIZE - PLAYER_SIZE) / 2, 
-         (float)gameMap.start.y * CELL_SIZE +32*CELL_SIZE+(CELL_SIZE - PLAYER_SIZE) / 2},
-        {(float)PLAYER_SIZE, (float)PLAYER_SIZE},
-        PLAYER_COLOR, 2.0f
-    };
+    Enemy* player = new Enemy{
+        { (float)gameMap.start.x * CELL_SIZE + 32 * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2, 
+          (float)gameMap.start.y * CELL_SIZE + 20 * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2 },
+        { (float)PLAYER_SIZE, (float)PLAYER_SIZE },
+        PLAYER_COLOR, 
+        2.0f
+    }; 
+    
     enemys.push_back(player); // This must be deleted since it is used for example. 
 
     // Type info variable <Set in Right Click>
@@ -72,11 +74,11 @@ int main() {
         float deltaTime = GetFrameTime(); // Iniciatize time, used for shooting logic 
 
         // Game logic-----
-        UpdateEnemy(player, gameMap);
+        UpdateEnemy(*player, gameMap);
         bool showTowerMenu = false;
 
         // Check Collision
-        if (CheckWinCondition(player, gameMap)) {
+        if (CheckWinCondition(*player, gameMap)) {
             BeginDrawing();
                 ClearBackground(BLACK);
                 DrawText("You Win!", screenWidth/2 - 100, screenHeight/2 - 20, 40, GREEN);
@@ -94,27 +96,28 @@ int main() {
             }
         }
         
+        // Check bullets and its targets.
         for (int i = (int)bullets.size() - 1; i >= 0; --i) {
             Bullet& b = bullets[i];
         
-            // Si el targetEnemy ya no existe (es nullptr) o lo que sea, puedes ignorar o eliminar según tu lógica
+            // If the targetEnemy no longer exists (is nullptr) or whatever, you can ignore or remove it according to your logic.
             if (!b.selectedEnemy) {
                 bullets.erase(bullets.begin() + i);
                 continue;
             }
         
-            // Calcular distancia entre bullet y target
+            // Distance between bullet and target
             float dx = b.position.x - (b.selectedEnemy->position.x + CELL_SIZE / 2);
             float dy = b.position.y - (b.selectedEnemy->position.y + CELL_SIZE / 2);
             float distance = sqrtf(dx * dx + dy * dy);
         
-            // Si llegó al enemigo (ajusta 5.0f como margen de colisión)
+            // If it hits the enemy (set 5.0f as collision margin)
             if (distance <= 5.0f) {
                 bullets.erase(bullets.begin() + i);
                 continue;
             }
         
-            // También borrar si se sale de pantalla
+            // If bullet is on border delete it
             if (b.position.x < 0 || b.position.x > screenWidth ||
                 b.position.y < 0 || b.position.y > screenHeight) {
                 bullets.erase(bullets.begin() + i);
@@ -131,7 +134,12 @@ int main() {
             BeginMode2D(cameraController.camera);
 
                 DrawMap(gameMap);
-                DrawRectangleV(player.position, player.size, player.color);
+
+                // Stuff from sample of enemy 
+                Vector2 pos = player->position;
+                Vector2 size = player->size;
+                Color color = player->color;
+                DrawRectangleV(pos, size, color);
 
                 // Check if an enemy is near each tower.
                 for (int i = 0; i < (int)towers.size(); i++) {
@@ -146,12 +154,12 @@ int main() {
                         // Aquí haces lo que necesites con el botón presionado
                         if (result == 1) {
                             coins.decreasCoins(10);
-                            towers.push_back(new ArcherTower((int)mouseCell.x, (int)mouseCell.y, 5, 2, 7, 4, 1, 1, towerID));
+                            towers.push_back(new ArcherTower((int)mouseCell.x, (int)mouseCell.y, 5, 1, 7, 4, 1, 1, towerID));
                             towerID++;
                             // Archer Tower  
                         } else if (result == 2) {
                             coins.decreasCoins(10);
-                            towers.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 7, 5, 3, 5, 2, 2, towerID));
+                            towers.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 7, 1, 3, 5, 2, 2, towerID));
                             towerID++;
                             // Whizar Tower
                         } else if (result == 3) {

@@ -30,7 +30,7 @@ void Tower::ShootEnemy(Enemy& enemy, vector<Bullet>& bulletList) {
 }
 
 
-void Tower::CheckIfEnemyesInRange(vector<Enemy>& enemies, vector<Bullet>& bulletList, float deltaTime) {
+void Tower::CheckIfEnemyesInRange(vector<Enemy*>& enemies, vector<Bullet>& bulletList, float deltaTime) {
 
   if (activeBullets >= 2 ) {
     timeSinceLastShot += deltaTime;
@@ -47,13 +47,13 @@ void Tower::CheckIfEnemyesInRange(vector<Enemy>& enemies, vector<Bullet>& bullet
   // Shoot only 1 / speed 
   if (timeSinceLastShot < 1 / speed) return;
 
-  for (Enemy& e : enemies) {
-      if (e.position.x  >= (xpos - scope) * CELL_SIZE && e.position.x <= (xpos + scope) * CELL_SIZE &&
-          e.position.y >= (ypos - scope) * CELL_SIZE && e.position.y <= (ypos + scope) * CELL_SIZE) {
-          
-          ShootEnemy(e, bulletList);
-          timeSinceLastShot = 0.0f; // reset
-          break; // shoot only once
-      }
-  }
+  for (Enemy* e : enemies) {
+    if (e->position.x  >= (xpos - scope) * CELL_SIZE && e->position.x <= (xpos + scope) * CELL_SIZE &&
+        e->position.y >= (ypos - scope) * CELL_SIZE && e->position.y <= (ypos + scope) * CELL_SIZE) {
+        
+        ShootEnemy(*e, bulletList);
+        timeSinceLastShot = 0.0f; // reset
+        break; // shoot only once
+    }
+  } 
 }

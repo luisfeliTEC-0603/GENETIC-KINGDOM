@@ -64,7 +64,7 @@ public:
     virtual void Upgrade1 ();
     virtual void Upgrade2 ();
     virtual void Upgrade3 ();
-    virtual void CheckIfEnemyesInRange(vector<Enemy>& enemies, vector<Bullet>& bulletList, float deltaTime);
+    virtual void CheckIfEnemyesInRange(vector<Enemy*>& enemies, vector<Bullet>& bulletList, float deltaTime);
     virtual void ShootEnemy(Enemy& enemy, vector<Bullet>& bulletList);
 
 
