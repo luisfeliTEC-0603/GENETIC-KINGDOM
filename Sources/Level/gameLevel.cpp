@@ -42,8 +42,11 @@ Map LoadMapFromSaves(const char* fileName) {
                     row.push_back(0);
                     map.start = {(float)x, (float)y};
                     break;
+                case '*': // Front kin tower
+                    row.push_back(3);
+                    break;
                 case 'G': // Goal
-                    row.push_back(0);
+                    row.push_back(4);
                     map.goal = {(float)x, (float)y};
                     break;
                 default:
@@ -72,7 +75,6 @@ Map LoadMapFromSaves(const char* fileName) {
 }
 
 void RenderMapTexture(Map& map) {
-    
     InitTextures(); // Initialize all Textures -> gameTextures.hpp
 
     // Load map for render texture
@@ -80,46 +82,73 @@ void RenderMapTexture(Map& map) {
 
     // Render map for texture
     BeginTextureMode(map.renderTexture);
+        ClearBackground(BLANK);  // Clear with transparent background
 
         // Iterates in the Map Matrix
         for (int y = 0; y < map.height; y++) {
             for (int x = 0; x < map.width; x++) {
-
                 Rectangle cell = {(float)x * CELL_SIZE, (float)y * CELL_SIZE, 
-                    (float)CELL_SIZE, (float)CELL_SIZE}; // Respective Cell
-                
+                    (float)CELL_SIZE, (float)CELL_SIZE};
+
                 // Case to Render the respective Texture
-                switch (map.grid[y][x]){
+                switch (map.grid[y][x]) {
+                    case 0: // Ground
+                        DrawTexturePro(GameTextures::ground, { float(RandomUtils::randomInt(3,4)) * CELL_SIZE, 0, CELL_SIZE, CELL_SIZE }, 
+                            cell, {0.0f, 0.0f}, 0.0f, WHITE);
+                        break;
+                    
+                    case 1: // Solid Ground
+                        DrawTexturePro(GameTextures::grass, { float(RandomUtils::randomInt(1,3) * CELL_SIZE), CELL_SIZE, CELL_SIZE, CELL_SIZE }, 
+                            cell, {0.0f, 0.0f}, 0.0f, WHITE);
 
-                case 0:
-                    DrawTexturePro(GameTextures::ground, { 64, 0, CELL_SIZE, CELL_SIZE }, 
-                        cell, {0.0f, 0.0f}, 0.0f, WHITE);
-                    break;
-                
-                case 1:
-                    DrawTexturePro(GameTextures::ground, { 32, 0, CELL_SIZE, CELL_SIZE }, 
-                        cell, {0.0f, 0.0f}, 0.0f, WHITE);
-
-                        // 70% Of a Tree Spamming
-                        if (RandomUtils::checkProbability(0.7)) {
+                        // 50% chance for a Tree
+                        if (RandomUtils::checkProbability(0.5)) {
                             DrawTexturePro(GameTextures::tree, { 
-                                float(RandomUtils::randomInt(1,3) * 16), 0, CELL_SIZE, CELL_SIZE }, 
-                                cell, {0.0f, 0.0f}, 0.0f, WHITE); 
+                                float(RandomUtils::randomInt(0,3) * CELL_SIZE), 0, CELL_SIZE, CELL_SIZE }, 
+                                cell, {0.0f, 0.0f}, 0.0f, WHITE);
                         }
-                    break;
-                
-                default:
-                    break;
+
+                        // 5% chance for a Cabin (independent of tree)
+                        if (RandomUtils::checkProbability(0.05)) {
+                            DrawTexturePro(GameTextures::cabin, { float(RandomUtils::randomInt(0,2) * CELL_SIZE),
+                                float(RandomUtils::randomInt(0,3) * CELL_SIZE),
+                                CELL_SIZE, CELL_SIZE }, 
+                                cell, {0.0f, 0.0f}, 0.0f, WHITE);
+                        }
+                        break;
+
+                    case 2: // Shore
+                        DrawTexturePro(GameTextures::shore, { float(RandomUtils::randomInt(2, 4) * CELL_SIZE), 
+                            0, CELL_SIZE, CELL_SIZE }, cell, {0.0f, 0.0f}, 0.0f, WHITE);
+                        
+                        // 1% chance for a Boat
+                        if (RandomUtils::checkProbability(0.01)) {
+                            DrawTexturePro(GameTextures::boat, { float(RandomUtils::randomInt(1,2) * CELL_SIZE), 0,
+                                CELL_SIZE, CELL_SIZE }, 
+                                cell, {0.0f, 0.0f}, 0.0f, WHITE);
+                        }
+                        break;
+                    
+                    case 3: // Kin Tower
+                        DrawTexturePro(GameTextures::kinTower, { CELL_SIZE, CELL_SIZE * 5, CELL_SIZE, CELL_SIZE }, 
+                            cell, {0.0f, 0.0f}, 0.0f, WHITE);
+                        break;
+                        
+                    default:
+                        break;
                 }
 
-                // Draw the Keep
-                if (x == (int)map.goal.x && y == (int)map.goal.y) {
-                    DrawTexturePro(GameTextures::keep, { 0, 0, CELL_SIZE * 2, CELL_SIZE * 2 }, 
-                        cell, {0.0f, 0.0f}, 0.0f, WHITE);
-                }
+                Rectangle keepCell = {
+                    (float)map.goal.x * CELL_SIZE - CELL_SIZE/2, 
+                    (float)map.goal.y * CELL_SIZE - CELL_SIZE/2,
+                    CELL_SIZE * 2, 
+                    CELL_SIZE * 2
+                };
+                DrawTexturePro(GameTextures::keep, 
+                    {0, 0, CELL_SIZE * 2, CELL_SIZE * 2}, 
+                    keepCell, {0.0f, 0.0f}, 0.0f, WHITE);
             }
         }
-
     EndTextureMode();
     map.textureInitialized = true;
 }

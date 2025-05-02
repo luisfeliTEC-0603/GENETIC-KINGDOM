@@ -13,6 +13,11 @@ namespace GameTextures // Available Textures
     extern Texture2D archerTowerBase;
     extern Texture2D artilleryTowerBase;
     extern Texture2D tree;
+    extern Texture2D cabin;
+    extern Texture2D grass;
+    extern Texture2D boat;
+    extern Texture2D shore;
+    extern Texture2D kinTower;
 }
 
 // Constant Parameters 

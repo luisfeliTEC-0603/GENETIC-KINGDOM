@@ -8,6 +8,11 @@ Texture2D GameTextures::archerForTower;
 Texture2D GameTextures::archerTowerBase;
 Texture2D GameTextures::artilleryTowerBase;
 Texture2D GameTextures::tree;
+Texture2D GameTextures::cabin;
+Texture2D GameTextures::grass;
+Texture2D GameTextures::boat;
+Texture2D GameTextures::shore;
+Texture2D GameTextures::kinTower;
 
 void InitTextures(){
 
@@ -19,6 +24,11 @@ void InitTextures(){
     GameTextures::archerTowerBase = LoadTexture("Assets/Towers/ArcherTower/CyanHuts.png");
     GameTextures::artilleryTowerBase = LoadTexture("Assets/AllAssetsPreview.png");
     GameTextures::tree = LoadTexture("Assets/Scene/Nature/Trees.png");
+    GameTextures::cabin = LoadTexture("Assets/Scene/Buildings/Cabin.png");
+    GameTextures::grass = LoadTexture("Assets/Scene/Nature/Grass.png");
+    GameTextures::boat = LoadTexture("Assets/Items/Boat.png");
+    GameTextures::shore = LoadTexture("Assets/Scene/Nature/Shore.png");
+    GameTextures::kinTower = LoadTexture("Assets/Towers/KinTower/KinTower.png");
 }
 void UnloadAllTextures(){
 
@@ -30,4 +40,9 @@ void UnloadAllTextures(){
     UnloadTexture(GameTextures::ground);
     UnloadTexture(GameTextures::keep);
     UnloadTexture(GameTextures::tree);
+    UnloadTexture(GameTextures::cabin);
+    UnloadTexture(GameTextures::grass);
+    UnloadTexture(GameTextures::boat);
+    UnloadTexture(GameTextures::shore);
+    UnloadTexture(GameTextures::kinTower);
 }
