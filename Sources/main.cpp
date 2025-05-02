@@ -61,6 +61,13 @@ int main() {
     // Type info variable <Set in Right Click>
     int cellValue = -1;
 
+
+    // Game message vairables
+    bool showMessage = false;
+    float messageStartTime = 0;
+    const float messageDuration = 2.0f;
+    char messageText[64];
+
     // Game Loop
     while (!WindowShouldClose()) {
 
@@ -88,7 +95,74 @@ int main() {
             // Access to cell info:
             cellValue = gameMap.grid[(int)mouseCell.y][(int)mouseCell.x];
             if (cellValue == 1) {
-                showTowerMenu = true;
+                showTowerMenu = true; // Tower selection
+            }
+
+            if (cellValue == 5) {
+                // Check which tower we are clicking
+                for (int i = 0; i < (int)towers.size(); i++) {
+                    if (towers[i]->getXpos() == (int)mouseCell.x && towers[i]->getYpos() == (int)mouseCell.y) {
+
+                        bool upg = UpgradeTower(towers[i]->getLevel());
+                        if (towers[i]->getLevel() == 0  && upg) {
+
+                            if (coins.getCoinsAmount() >= 50) { // Check if there are enough coins available.
+                                coins.decreasCoins(50);
+                                towers[i]->Upgrade1();
+                                towers[i]->increaseLevel();
+                                break;
+                            }
+
+                            else{
+                                sprintf(messageText, "No tienes suficientes monedas!");
+                                showMessage = true;
+                                messageStartTime = GetTime();
+                                break;
+                            }
+
+                        }  
+
+                        if (towers[i]->getLevel() == 1  && upg) {
+                            if (coins.getCoinsAmount() >= 100) {
+                                coins.decreasCoins(100);
+                                towers[i]->Upgrade2();
+                                towers[i]->increaseLevel();
+                                break;
+                            }
+
+                            else{
+                                sprintf(messageText, "No tienes suficientes monedas!");
+                                showMessage = true;
+                                messageStartTime = GetTime();
+                                break;
+                            }
+
+                        }  
+
+                        if (towers[i]->getLevel() == 2  && upg) {
+                            if (coins.getCoinsAmount() >= 150) {
+                                coins.decreasCoins(150);
+                                towers[i]->Upgrade3();
+                                towers[i]->increaseLevel();
+                                break;
+                            }
+                            else{
+                                sprintf(messageText, "No tienes suficientes monedas!");
+                                showMessage = true;
+                                messageStartTime = GetTime();
+                                break;
+                            }
+
+                        }  
+
+                        if (towers[i]->getLevel() >= 3) {
+                            sprintf(messageText, "Torre al máximo nivel!");
+                            showMessage = true;
+                            messageStartTime = GetTime();
+                        }  
+                        break;
+                    }
+                }
             }
         }
         
@@ -150,7 +224,7 @@ int main() {
                         if (result == 1) {
                             coins.decreasCoins(10);
                             towers.push_back(new ArcherTower((int)mouseCell.x, (int)mouseCell.y, 5, 2, 7, 4, 1, 1, 1));
-                            gameMap.grid[(int)mouseCell.y][(int)mouseCell.x] = 5;
+                            gameMap.grid[(int)mouseCell.y][(int)mouseCell.x] = 5; // 5 is an identificator that a tower has been asigned here.
                             // Archer Tower  
                         } else if (result == 2) {
                             coins.decreasCoins(10);
@@ -175,14 +249,27 @@ int main() {
                     bullets[i].position.y += bullets[i].direction.y * bullets[i].speed;
                 
                     // Draw bullets
-                    DrawCircleV(bullets[i].position, 3, RED);
+                    DrawCircleV(bullets[i].position, 2, WHITE);
                 
+                }
+
+                // Show message
+                if (showMessage) {
+                    DrawRectangle(((int)mouseCell.x - 8) * CELL_SIZE , ((int)mouseCell.y - 8) * CELL_SIZE , 350, 50, RED);
+                    DrawText(messageText, ((int)mouseCell.x - 7) * CELL_SIZE, ((int)mouseCell.y - 7) * CELL_SIZE, 20, WHITE); // 400 / 200
+                
+                    if (GetTime() - messageStartTime >= messageDuration) {
+                        showMessage = false;
+                    }
                 }
 
             EndMode2D();
 
             // Data Collection-----
             DrawCircleV(GetMousePosition(), 4, DARKGRAY); // Exact Mouse Position
+
+            DrawTextEx(GetFontDefault(),TextFormat("Currency[%i]", coins), 
+                Vector2Add(GetMousePosition(), (Vector2){ -44, 72 }), 20, 2, RED); // Data : Actuall Currency
             
             DrawTextEx(GetFontDefault(), TextFormat("pxls [%i, %i]", GetMouseX(), GetMouseY()), 
                 Vector2Add(GetMousePosition(), (Vector2){ -44, -24 }), 20, 2, RED); // Data : Mouse Coords

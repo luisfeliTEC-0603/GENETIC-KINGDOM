@@ -57,6 +57,7 @@ private:
     float timeSinceLastShot = 0.0f;
     int type; //type = 1 arqueros, type = 2 magos, type = 3 artilleros
     int towerVision;
+    int actualLevel = 0;
 
 public:
     Tower (int xpos, int ypos, int damage, int speed, int scope, int regTime, int reloadTime, int type, int vision);
@@ -79,6 +80,7 @@ public:
     int getYpos() const { return ypos; }
     int getActiveBullets() const { return activeBullets; }
     int getVision() const {return towerVision;}
+    int getLevel() const {return actualLevel;}
 
     // Setters
     void setDamage(int d) { damage = d; }
@@ -90,6 +92,8 @@ public:
     void setActiveBullets(int count) { activeBullets = count; }
     void setVisionPos (int newPos) { towerVision = newPos;}
 
+    // Extra functions
+    void increaseLevel () {actualLevel++;}
 
 };
 
