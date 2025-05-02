@@ -193,7 +193,7 @@ int main() {
             DrawTextEx(GetFontDefault(), TextFormat("cell [%i, %i]", (int)mouseCell.x, (int)mouseCell.y), 
                 Vector2Add(GetMousePosition(), (Vector2){ -44, 24 }), 20, 2, RED); // Data : Mouse in Cell
 
-            DrawTextEx(GetFontDefault(), TextFormat("cell-info [%i]", (int)bullets.size()), 
+            DrawTextEx(GetFontDefault(), TextFormat("cell-info [%i]", cellValue), 
                 Vector2Add(GetMousePosition(), (Vector2){ -44, 48 }), 20, 2, RED); // Data : Mouse in Cell
 
         EndDrawing();
