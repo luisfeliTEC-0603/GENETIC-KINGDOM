@@ -4,8 +4,6 @@
 #include <vector>
 #include <iostream>
 
-
-
 #include "Game/game.hpp"
 #include "System/camera.hpp"
 
@@ -15,7 +13,6 @@
 #include "Tower/artillery.hpp"
 #include "Tower/whizard.hpp"
 
-
 int main() {
 
     // Initialization
@@ -24,7 +21,6 @@ int main() {
 
     // Game objects
     // Vector with towers that are on map
-
     vector<Tower*> towers = {};
 
     // Currency of the game
@@ -46,7 +42,7 @@ int main() {
 
     // Enemy Sample -> gameEnemies.hpp
     Enemy player = {
-        {(float)gameMap.start.x * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2, 
+        {(float)gameMap.start.x * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2 + 5 * CELL_SIZE, 
          (float)gameMap.start.y * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2},
         {(float)PLAYER_SIZE, (float)PLAYER_SIZE},
         PLAYER_COLOR, 2.0f
@@ -144,6 +140,7 @@ int main() {
 
     // Cleanup
     UnloadAllTextures(); // Finalize Textures -> gameTextures.hpp
+    UnloadRenderTexture(gameMap.renderTexture);
     CloseWindow();
     return 0;
 }

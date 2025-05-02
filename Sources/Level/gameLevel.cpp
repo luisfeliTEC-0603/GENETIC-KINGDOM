@@ -65,52 +65,75 @@ Map LoadMapFromSaves(const char* fileName) {
     // Get map dimensions
     map.height = map.grid.size();
     map.width = map.grid[0].size();
+
+    RenderMapTexture(map);
     
     return map;
 }
 
-void DrawMap(const Map& map) { // Renders Map
+void RenderMapTexture(Map& map) {
     
     InitTextures(); // Initialize all Textures -> gameTextures.hpp
 
-    // Iterates in the Map Matrix
-    for (int y = 0; y < map.height; y++) {
-        for (int x = 0; x < map.width; x++) {
+    // Load map for render texture
+    map.renderTexture = LoadRenderTexture(map.width * CELL_SIZE, map.height * CELL_SIZE);
 
-            Rectangle cell = {(float)x * CELL_SIZE, (float)y * CELL_SIZE, 
-                (float)CELL_SIZE, (float)CELL_SIZE}; // Respective Cell
-            
-            // Case to Render the respective Texture
-            switch (map.grid[y][x]){
+    // Render map for texture
+    BeginTextureMode(map.renderTexture);
 
-            case 0:
-                DrawTexturePro(GameTextures::ground, { 64, 0, CELL_SIZE, CELL_SIZE }, 
-                    cell, {0.0f, 0.0f}, 0.0f, WHITE);
-                break;
-            
-            case 1:
-                DrawTexturePro(GameTextures::ground, { 32, 0, CELL_SIZE, CELL_SIZE }, 
-                    cell, {0.0f, 0.0f}, 0.0f, WHITE);
+        // Iterates in the Map Matrix
+        for (int y = 0; y < map.height; y++) {
+            for (int x = 0; x < map.width; x++) {
 
-                    // 70% Of a Tree Spamming
-                    if (RandomUtils::checkProbability(0.7)) {
-                        DrawTexturePro(GameTextures::tree, { 
-                            RandomUtils::randomFloat(1,3) * 16, 0, CELL_SIZE, CELL_SIZE }, 
-                            cell, {0.0f, 0.0f}, 0.0f, WHITE); 
-                    }
-                break;
-            
-            default:
-                break;
-            }
+                Rectangle cell = {(float)x * CELL_SIZE, (float)y * CELL_SIZE, 
+                    (float)CELL_SIZE, (float)CELL_SIZE}; // Respective Cell
+                
+                // Case to Render the respective Texture
+                switch (map.grid[y][x]){
 
-            // Draw the Keep
-            if (x == (int)map.goal.x && y == (int)map.goal.y) {
-                DrawTexturePro(GameTextures::keep, { 0, 0, CELL_SIZE * 2, CELL_SIZE * 2 }, 
-                    cell, {0.0f, 0.0f}, 0.0f, WHITE);
+                case 0:
+                    DrawTexturePro(GameTextures::ground, { 64, 0, CELL_SIZE, CELL_SIZE }, 
+                        cell, {0.0f, 0.0f}, 0.0f, WHITE);
+                    break;
+                
+                case 1:
+                    DrawTexturePro(GameTextures::ground, { 32, 0, CELL_SIZE, CELL_SIZE }, 
+                        cell, {0.0f, 0.0f}, 0.0f, WHITE);
+
+                        // 70% Of a Tree Spamming
+                        if (RandomUtils::checkProbability(0.7)) {
+                            DrawTexturePro(GameTextures::tree, { 
+                                float(RandomUtils::randomInt(1,3) * 16), 0, CELL_SIZE, CELL_SIZE }, 
+                                cell, {0.0f, 0.0f}, 0.0f, WHITE); 
+                        }
+                    break;
+                
+                default:
+                    break;
+                }
+
+                // Draw the Keep
+                if (x == (int)map.goal.x && y == (int)map.goal.y) {
+                    DrawTexturePro(GameTextures::keep, { 0, 0, CELL_SIZE * 2, CELL_SIZE * 2 }, 
+                        cell, {0.0f, 0.0f}, 0.0f, WHITE);
+                }
             }
         }
-    }
+
+    EndTextureMode();
+    map.textureInitialized = true;
+}
+
+void DrawMap(const Map& map){
+    if (!map.textureInitialized) return;
+    
+    // Draw texture
+    DrawTextureRec(
+        map.renderTexture.texture,
+        (Rectangle){0, 0, (float)map.renderTexture.texture.width, -(float)map.renderTexture.texture.height},
+        (Vector2){0, 0},
+        WHITE
+    );
 }
 
 void DrawTower(const Map& map, int x, int y, int type) {

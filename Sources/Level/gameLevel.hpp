@@ -14,9 +14,14 @@ struct Map { // Represents the map
     // Unitary Dimensions
     int width;
     int height;
+
+    // Map Render
+    RenderTexture2D renderTexture;
+    bool textureInitialized = false;
 };
 
 Map LoadMapFromSaves(const char* fileName);
+void RenderMapTexture(Map& map);
 void DrawMap(const Map& map);
 void DrawTower(const Map& map, int x, int y, int type);
 void DrawWizard(int x, int y);
