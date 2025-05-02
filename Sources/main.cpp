@@ -23,9 +23,10 @@ int main() {
     const int screenHeight = 640;
 
     // Game objects
-    // Vector with towers that are on map
+    // Vector with towers that are on map and towerID to recognize each tower when deletting bullets
 
     vector<Tower*> towers = {};
+    int towerID = 0;
 
     // Vector with Enemies deployed on game map
     vector<Enemy> enemys = {};
@@ -52,8 +53,8 @@ int main() {
 
     // Enemy Sample -> gameEnemies.hpp
     Enemy player = {
-        {(float)gameMap.start.x * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2, 
-         (float)gameMap.start.y * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2},
+        {(float)gameMap.start.x * CELL_SIZE +32*CELL_SIZE+(CELL_SIZE - PLAYER_SIZE) / 2, 
+         (float)gameMap.start.y * CELL_SIZE +32*CELL_SIZE+(CELL_SIZE - PLAYER_SIZE) / 2},
         {(float)PLAYER_SIZE, (float)PLAYER_SIZE},
         PLAYER_COLOR, 2.0f
     };
@@ -68,6 +69,7 @@ int main() {
         // System----- (-> System/camera.hpp)
         cameraController.Update(gameMap);
         Vector2 mouseCell = GetMouseCell(cameraController.camera, gameMap);
+        float deltaTime = GetFrameTime(); // Iniciatize time, used for shooting logic 
 
         // Game logic-----
         UpdateEnemy(player, gameMap);
@@ -91,10 +93,12 @@ int main() {
                 showTowerMenu = true;
             }
         }
-
+        
+        // Erase bullets needed logic to colide with enemy
         for (int i = (int)bullets.size() - 1; i >= 0; i--) {
             if (bullets[i].position.x < 0 || bullets[i].position.x > screenWidth ||
                 bullets[i].position.y < 0 || bullets[i].position.y > screenHeight) {
+                    
                 bullets.erase(bullets.begin() + i);
             }
         }
@@ -110,34 +114,41 @@ int main() {
 
                 DrawMap(gameMap);
                 DrawRectangleV(player.position, player.size, player.color);
+
+                // Check if an enemy is near each tower.
                 for (int i = 0; i < (int)towers.size(); i++) {
                     DrawTower(gameMap, towers[i]->getXpos(), towers[i]->getYpos(), towers[i]->getType());
-                    towers[i]->CheckIfEnemyesInRange(enemys, bullets);
+                    towers[i]->CheckIfEnemyesInRange(enemys, bullets, deltaTime);
                 }
-
+                
+                // This is in case player wants to add a new tower, can be cancelled
                 if (showTowerMenu) {
                     int result = ShowScreen();
                     if (result != 0) {
                         // Aquí haces lo que necesites con el botón presionado
                         if (result == 1) {
                             coins.decreasCoins(10);
-                            towers.push_back(new ArcherTower((int)mouseCell.x, (int)mouseCell.y, 5, 2, 7, 4, 1, 1));
+                            towers.push_back(new ArcherTower((int)mouseCell.x, (int)mouseCell.y, 5, 2, 7, 4, 1, 1, towerID));
+                            towerID++;
                             // Archer Tower  
                         } else if (result == 2) {
                             coins.decreasCoins(10);
-                            towers.push_back(new WhizardTower((int)mouseCell.x, (int)mouseCell.y, 7, 1, 5, 5, 1, 2));
+                            towers.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 7, 5, 3, 5, 2, 2, towerID));
+                            towerID++;
                             // Whizar Tower
                         } else if (result == 3) {
                             coins.decreasCoins(10);
-                            towers.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 10, 2, 3, 5, 2, 3));
+                            towers.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 10, 2, 3, 5, 2, 3, towerID));
+                            towerID++;
                             // Artillery Tower
                         } else if (result == 4) {
-                            // Cancel logic
+                            // Cnancel
                         }
                         showTowerMenu = false;
                     }
                 }
 
+                // this is made for bullet to be draw again
                 for (int i = 0; i < (int)bullets.size(); i++) {
                     bullets[i].position.x += bullets[i].direction.x * bullets[i].speed;
                     bullets[i].position.y += bullets[i].direction.y * bullets[i].speed;

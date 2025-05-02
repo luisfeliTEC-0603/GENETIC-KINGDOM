@@ -37,14 +37,16 @@ struct Bullet {
     Vector2 direction;
     float speed;
     int damage;
+    int towerID;
 
-    Bullet(Vector2 pos, Vector2 dir, float spd, int dmg)
-        : position(pos), direction(dir), speed(spd), damage(dmg) {}
+    Bullet(Vector2 pos, Vector2 dir, float spd, int dmg, int tid)
+        : position(pos), direction(dir), speed(spd), damage(dmg), towerID(tid) {}
 };
 
 
 class Tower {
 private:
+    int towerID;
     int xpos;
     int ypos;
     int damage;
@@ -52,14 +54,16 @@ private:
     int scope;
     int regTime;
     int reloadTime;
+    int activeBullets = 0;
+    float timeSinceLastShot = 0.0f;
     int type; //type = 1 arqueros, type = 2 magos, type = 3 artilleros
 
 public:
-    Tower (int xpos, int ypos, int damage, int speed, int scope, int regTime, int reloadTime, int type);
+    Tower (int xpos, int ypos, int damage, int speed, int scope, int regTime, int reloadTime, int type, int towerID);
     virtual void Upgrade1 ();
     virtual void Upgrade2 ();
     virtual void Upgrade3 ();
-    virtual void CheckIfEnemyesInRange(const vector<Enemy>& enemies, vector<Bullet>& bulletList);
+    virtual void CheckIfEnemyesInRange(const vector<Enemy>& enemies, vector<Bullet>& bulletList, float deltaTime);
     virtual void ShootEnemy(const Enemy& enemy, vector<Bullet>& bulletList);
 
 
@@ -73,6 +77,8 @@ public:
     int getType() const { return type; }
     int getXpos() const { return xpos; }
     int getYpos() const { return ypos; }
+    int getActiveBullets() const { return activeBullets; }
+    int getTowerId() const {return towerID;}
 
     // Setters
     void setDamage(int d) { damage = d; }
@@ -81,6 +87,9 @@ public:
     void setRegTime(int rt) { regTime = rt; }
     void setReloadTime(int rlt) { reloadTime = rlt; }
     void setType(int t) { type = t; }
+    void setActiveBullets(int count) { activeBullets = count; }
+    void decreaseActiveBullets() { if (activeBullets > 0) activeBullets--; }
+
 
 };
 
