@@ -23,9 +23,9 @@ struct Map { // Represents the map
 Map LoadMapFromSaves(const char* fileName);
 void RenderMapTexture(Map& map);
 void DrawMap(const Map& map);
-void DrawTower(const Map& map, int x, int y, int type);
-void DrawWizard(int x, int y);
-void DrawArcher(int x, int y);
-void DrawArtillery(int x, int y);
+void DrawTower(const Map& map, int x, int y, int type, int visionTower);
+void DrawWizard(int x, int y, int visionTower);
+void DrawArcher(int x, int y, int visionTower);
+void DrawArtillery(int x, int y, int visionTower);
 
 #endif

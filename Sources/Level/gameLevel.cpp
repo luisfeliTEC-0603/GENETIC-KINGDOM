@@ -165,33 +165,48 @@ void DrawMap(const Map& map){
     );
 }
 
-void DrawTower(const Map& map, int x, int y, int type) {
+void DrawTower(const Map& map, int x, int y, int type, int visionTower) {
     if (type == 1) {
-        DrawArcher(x,y);
+        DrawArcher(x,y, visionTower);
     } 
 
     if (type == 2) {
-        DrawWizard(x,y);
+        DrawWizard(x,y, visionTower);
     } 
 
     if (type == 3) {
-        DrawArtillery(x,y);
+        DrawArtillery(x,y, visionTower);
     } 
 }
 
-void DrawArcher(int x, int y) {
+void DrawArcher(int x, int y, int visionTower) {
 
     Rectangle cell = {(float)x * CELL_SIZE, (float)y * CELL_SIZE, 
         (float)CELL_SIZE, (float)CELL_SIZE}; // Respective Cell
 
     DrawTexturePro(GameTextures::archerTowerBase, { 0,5, CELL_SIZE, CELL_SIZE }, 
         cell, {0.0f, 0.0f}, 0.0f, WHITE);
+    
+    if (visionTower == 1) {
+        DrawTexturePro(GameTextures::archerForTower, { 353, 16, CELL_SIZE, CELL_SIZE }, 
+            cell, {0.0f, 0.0f}, 0.0f, WHITE);
+    }
+    if (visionTower == 2) {
+        DrawTexturePro(GameTextures::archerForTower, { 353, 33, CELL_SIZE, CELL_SIZE }, 
+            cell, {0.0f, 0.0f}, 0.0f, WHITE);
+    }
+    if (visionTower == 3) {
+        DrawTexturePro(GameTextures::archerForTower, { 353, 66, CELL_SIZE, CELL_SIZE }, 
+            cell, {0.0f, 0.0f}, 0.0f, WHITE);
+    }
+    if (visionTower == 4) {
+        DrawTexturePro(GameTextures::archerForTower, { 353, 50, CELL_SIZE, CELL_SIZE }, 
+            cell, {0.0f, 0.0f}, 0.0f, WHITE);
+    }
 
-    DrawTexturePro(GameTextures::archerForTower, { 353, 50, CELL_SIZE, CELL_SIZE }, 
-        cell, {0.0f, 0.0f}, 0.0f, WHITE);
 }
 
-void DrawWizard(int x, int y){
+void DrawWizard(int x, int y, int visionTower){
 
     Rectangle cell = {(float)x * CELL_SIZE, (float)y * CELL_SIZE, 
         (float)CELL_SIZE, (float)CELL_SIZE}; // Respective Cell
@@ -199,14 +214,50 @@ void DrawWizard(int x, int y){
     DrawTexturePro(GameTextures::wizardTowerBase, { 0,8, CELL_SIZE, CELL_SIZE }, 
         cell, {0.0f, 0.0f}, 0.0f, WHITE);
 
-    DrawTexturePro(GameTextures::wizardForTower, { 352, 193, CELL_SIZE, CELL_SIZE }, 
-        cell, {0.0f, 0.0f}, 0.0f, WHITE);
+    if (visionTower == 1) {
+        DrawTexturePro(GameTextures::wizardForTower, { 352, 207, CELL_SIZE, CELL_SIZE }, 
+            cell, {0.0f, 0.0f}, 0.0f, WHITE);
+    }
+
+    if (visionTower == 2) {
+        DrawTexturePro(GameTextures::wizardForTower, { 352, 161, CELL_SIZE, CELL_SIZE }, 
+            cell, {0.0f, 0.0f}, 0.0f, WHITE);
+    }
+
+    if (visionTower == 3) {
+        DrawTexturePro(GameTextures::wizardForTower, { 352, 193, CELL_SIZE, CELL_SIZE }, 
+            cell, {0.0f, 0.0f}, 0.0f, WHITE);
+    }
+
+    if (visionTower == 4) {
+        DrawTexturePro(GameTextures::wizardForTower, { 352, 176, CELL_SIZE, CELL_SIZE }, 
+            cell, {0.0f, 0.0f}, 0.0f, WHITE);
+    }
+
 }
 
-void DrawArtillery(int x, int y) {
+void DrawArtillery(int x, int y, int visionTower) {
     Rectangle cell = {(float)x * CELL_SIZE, (float)y * CELL_SIZE, 
         (float)CELL_SIZE, (float)CELL_SIZE}; // Respective Cell
+    
+    if (visionTower == 1) {
+        DrawTexturePro(GameTextures::artilleryTowerBase, { 240,192, CELL_SIZE, CELL_SIZE }, 
+            cell, {0.0f, 0.0f}, 0.0f, WHITE);
+    }
 
-    DrawTexturePro(GameTextures::artilleryTowerBase, { 240,192, CELL_SIZE, CELL_SIZE }, 
-        cell, {0.0f, 0.0f}, 0.0f, WHITE);
+    if (visionTower == 2) {
+        DrawTexturePro(GameTextures::artilleryTowerBase, { 239,224, CELL_SIZE, CELL_SIZE }, 
+            cell, {0.0f, 0.0f}, 0.0f, WHITE);
+    }
+
+    if (visionTower == 3) {
+        DrawTexturePro(GameTextures::artilleryTowerBase, { 240,208, CELL_SIZE, CELL_SIZE }, 
+            cell, {0.0f, 0.0f}, 0.0f, WHITE);
+    }
+
+    if (visionTower == 4) {
+        DrawTexturePro(GameTextures::artilleryTowerBase, { 242,240, CELL_SIZE, CELL_SIZE }, 
+            cell, {0.0f, 0.0f}, 0.0f, WHITE);
+    }
+
 }

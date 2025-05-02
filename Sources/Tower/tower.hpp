@@ -27,8 +27,22 @@ ataque alto
 
 #include <string>
 #include <iostream>
+#include <vector>
+#include "../Enemies/gameEnemies.hpp"
 
 using namespace std;
+
+struct Bullet {
+    Vector2 position;
+    Vector2 direction;
+    float speed;
+    int damage;
+    Enemy* selectedEnemy;
+
+    Bullet(Vector2 pos, Vector2 dir, float spd, int dmg, Enemy* selected)
+        : position(pos), direction(dir), speed(spd), damage(dmg), selectedEnemy(selected){}
+};
+
 
 class Tower {
 private:
@@ -39,13 +53,19 @@ private:
     int scope;
     int regTime;
     int reloadTime;
+    int activeBullets = 0;
+    float timeSinceLastShot = 0.0f;
     int type; //type = 1 arqueros, type = 2 magos, type = 3 artilleros
+    int towerVision;
 
 public:
-    Tower (int xpos, int ypos, int damage, int speed, int scope, int regTime, int reloadTime, int type);
+    Tower (int xpos, int ypos, int damage, int speed, int scope, int regTime, int reloadTime, int type, int vision);
     virtual void Upgrade1 ();
     virtual void Upgrade2 ();
     virtual void Upgrade3 ();
+    virtual void CheckIfEnemyesInRange(vector<Enemy*>& enemies, vector<Bullet>& bulletList, float deltaTime);
+    virtual void ShootEnemy(Enemy& enemy, vector<Bullet>& bulletList);
+
 
     //Getters and setters for the upgrades
     // Getters
@@ -57,6 +77,8 @@ public:
     int getType() const { return type; }
     int getXpos() const { return xpos; }
     int getYpos() const { return ypos; }
+    int getActiveBullets() const { return activeBullets; }
+    int getVision() const {return towerVision;}
 
     // Setters
     void setDamage(int d) { damage = d; }
@@ -65,6 +87,9 @@ public:
     void setRegTime(int rt) { regTime = rt; }
     void setReloadTime(int rlt) { reloadTime = rlt; }
     void setType(int t) { type = t; }
+    void setActiveBullets(int count) { activeBullets = count; }
+    void setVisionPos (int newPos) { towerVision = newPos;}
+
 
 };
 
