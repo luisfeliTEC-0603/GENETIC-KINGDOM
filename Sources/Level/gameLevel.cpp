@@ -184,6 +184,9 @@ void DrawArcher(int x, int y, int visionTower) {
     Rectangle cell = {(float)x * CELL_SIZE, (float)y * CELL_SIZE, 
         (float)CELL_SIZE, (float)CELL_SIZE}; // Respective Cell
 
+    DrawTexturePro(GameTextures::grass, { float(RandomUtils::randomInt(1,3) * CELL_SIZE), CELL_SIZE, CELL_SIZE, CELL_SIZE }, 
+        cell, {0.0f, 0.0f}, 0.0f, WHITE);
+
     DrawTexturePro(GameTextures::archerTowerBase, { 0,5, CELL_SIZE, CELL_SIZE }, 
         cell, {0.0f, 0.0f}, 0.0f, WHITE);
     
@@ -210,6 +213,10 @@ void DrawWizard(int x, int y, int visionTower){
 
     Rectangle cell = {(float)x * CELL_SIZE, (float)y * CELL_SIZE, 
         (float)CELL_SIZE, (float)CELL_SIZE}; // Respective Cell
+
+    DrawTexturePro(GameTextures::grass, { float(RandomUtils::randomInt(1,3) * CELL_SIZE), CELL_SIZE, CELL_SIZE, CELL_SIZE }, 
+        cell, {0.0f, 0.0f}, 0.0f, WHITE);
+        
 
     DrawTexturePro(GameTextures::wizardTowerBase, { 0,8, CELL_SIZE, CELL_SIZE }, 
         cell, {0.0f, 0.0f}, 0.0f, WHITE);
@@ -239,6 +246,10 @@ void DrawWizard(int x, int y, int visionTower){
 void DrawArtillery(int x, int y, int visionTower) {
     Rectangle cell = {(float)x * CELL_SIZE, (float)y * CELL_SIZE, 
         (float)CELL_SIZE, (float)CELL_SIZE}; // Respective Cell
+
+    DrawTexturePro(GameTextures::grass, { float(RandomUtils::randomInt(1,3) * CELL_SIZE), CELL_SIZE, CELL_SIZE, CELL_SIZE }, 
+        cell, {0.0f, 0.0f}, 0.0f, WHITE);
+        
     
     if (visionTower == 1) {
         DrawTexturePro(GameTextures::artilleryTowerBase, { 240,192, CELL_SIZE, CELL_SIZE }, 
