@@ -38,9 +38,10 @@ struct Bullet {
     float speed;
     int damage;
     int towerID;
+    Enemy* selectedEnemy;
 
-    Bullet(Vector2 pos, Vector2 dir, float spd, int dmg, int tid)
-        : position(pos), direction(dir), speed(spd), damage(dmg), towerID(tid) {}
+    Bullet(Vector2 pos, Vector2 dir, float spd, int dmg, int tid, Enemy* selected)
+        : position(pos), direction(dir), speed(spd), damage(dmg), towerID(tid), selectedEnemy(selected){}
 };
 
 
@@ -63,8 +64,8 @@ public:
     virtual void Upgrade1 ();
     virtual void Upgrade2 ();
     virtual void Upgrade3 ();
-    virtual void CheckIfEnemyesInRange(const vector<Enemy>& enemies, vector<Bullet>& bulletList, float deltaTime);
-    virtual void ShootEnemy(const Enemy& enemy, vector<Bullet>& bulletList);
+    virtual void CheckIfEnemyesInRange(vector<Enemy>& enemies, vector<Bullet>& bulletList, float deltaTime);
+    virtual void ShootEnemy(Enemy& enemy, vector<Bullet>& bulletList);
 
 
     //Getters and setters for the upgrades

@@ -94,11 +94,29 @@ int main() {
             }
         }
         
-        // Erase bullets needed logic to colide with enemy
-        for (int i = (int)bullets.size() - 1; i >= 0; i--) {
-            if (bullets[i].position.x < 0 || bullets[i].position.x > screenWidth ||
-                bullets[i].position.y < 0 || bullets[i].position.y > screenHeight) {
-                    
+        for (int i = (int)bullets.size() - 1; i >= 0; --i) {
+            Bullet& b = bullets[i];
+        
+            // Si el targetEnemy ya no existe (es nullptr) o lo que sea, puedes ignorar o eliminar según tu lógica
+            if (!b.selectedEnemy) {
+                bullets.erase(bullets.begin() + i);
+                continue;
+            }
+        
+            // Calcular distancia entre bullet y target
+            float dx = b.position.x - (b.selectedEnemy->position.x + CELL_SIZE / 2);
+            float dy = b.position.y - (b.selectedEnemy->position.y + CELL_SIZE / 2);
+            float distance = sqrtf(dx * dx + dy * dy);
+        
+            // Si llegó al enemigo (ajusta 5.0f como margen de colisión)
+            if (distance <= 5.0f) {
+                bullets.erase(bullets.begin() + i);
+                continue;
+            }
+        
+            // También borrar si se sale de pantalla
+            if (b.position.x < 0 || b.position.x > screenWidth ||
+                b.position.y < 0 || b.position.y > screenHeight) {
                 bullets.erase(bullets.begin() + i);
             }
         }
