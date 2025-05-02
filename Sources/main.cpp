@@ -150,14 +150,17 @@ int main() {
                         if (result == 1) {
                             coins.decreasCoins(10);
                             towers.push_back(new ArcherTower((int)mouseCell.x, (int)mouseCell.y, 5, 2, 7, 4, 1, 1, 1));
+                            gameMap.grid[(int)mouseCell.y][(int)mouseCell.x] = 5;
                             // Archer Tower  
                         } else if (result == 2) {
                             coins.decreasCoins(10);
                             towers.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 7, 1, 3, 5, 2, 2, 1));
+                            gameMap.grid[(int)mouseCell.y][(int)mouseCell.x] = 5;
                             // Whizar Tower
                         } else if (result == 3) {
                             coins.decreasCoins(10);
                             towers.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 10, 1, 3, 5, 2, 3, 1));
+                            gameMap.grid[(int)mouseCell.y][(int)mouseCell.x] = 5;
                             // Artillery Tower
                         } else if (result == 4) {
                             // Cnancel
