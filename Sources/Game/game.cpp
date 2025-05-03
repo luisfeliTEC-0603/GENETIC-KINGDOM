@@ -1,15 +1,35 @@
 #include "game.hpp"
-#include "raylib.h"
 
-Enemy* newEnemy(const Map& map, const Vector2& start){
-    Enemy* enemy =  new Enemy(
-        { (float)start.x * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2, 
-          (float)start.y * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2 },
+Enemy* newEnemy(const Map& map, const Vector2& start) {
+    // Convert grid position to pixel position
+    Vector2 pixelPosition = {
+        (float)start.x * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2, 
+        (float)start.y * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2
+    };
+    
+    Enemy* enemy = new Enemy(
+        pixelPosition,
         { (float)PLAYER_SIZE, (float)PLAYER_SIZE },
         PLAYER_COLOR, 
         2.0f
-        ); 
-
+    );
+    
+    Vector2 gridStart = { start.x, start.y };
+    Vector2 gridGoal = { map.goal.x / CELL_SIZE,map.goal.y / CELL_SIZE };
+    
+    std::vector<Vector2> path = AStarPathfinder::findPath(map.grid, gridStart, gridGoal);
+    
+    if (!path.empty()) {
+        std::vector<Vector2> worldPath;
+        for (const auto& gridPos : path) {
+            worldPath.push_back({
+                gridPos.x * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2,
+                gridPos.y * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2
+            });
+        }
+        enemy->setPathway(worldPath);
+    }
+    
     return enemy;
 }
 

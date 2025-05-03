@@ -31,7 +31,6 @@ Map LoadMapFromSaves(const char* fileName) {
                 case ' ':
                     row.push_back(0);
                     break;
-
                 case '#': // Wall
                     row.push_back(1);
                     break;
