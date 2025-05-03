@@ -48,13 +48,13 @@ int main() {
     cameraController.Initialize(screenWidth, screenHeight, gameMap);
 
     // Enemy Sample -> gameEnemies.hpp
-    Enemy* player = new Enemy{
+    Enemy* player = new Enemy(
         { (float)gameMap.start.x * CELL_SIZE + 32 * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2, 
           (float)gameMap.start.y * CELL_SIZE + 20 * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2 },
         { (float)PLAYER_SIZE, (float)PLAYER_SIZE },
         PLAYER_COLOR, 
         2.0f
-    }; 
+        ); 
     
     enemys.push_back(player); // This must be deleted since it is used for example. 
 
@@ -177,8 +177,8 @@ int main() {
             }
         
             // Distance between bullet and target
-            float dx = b.position.x - (b.selectedEnemy->position.x + CELL_SIZE / 2);
-            float dy = b.position.y - (b.selectedEnemy->position.y + CELL_SIZE / 2);
+            float dx = b.position.x - (b.selectedEnemy->getPosition().x + CELL_SIZE / 2);
+            float dy = b.position.y - (b.selectedEnemy->getPosition().y + CELL_SIZE / 2);
             float distance = sqrtf(dx * dx + dy * dy);
         
             // If it hits the enemy (set 5.0f as collision margin)
@@ -205,10 +205,9 @@ int main() {
 
                 DrawMap(gameMap);
                 // Stuff from sample of enemy 
-                Vector2 pos = player->position;
-                Vector2 size = player->size;
-                Color color = player->color;
-                DrawRectangleV(pos, size, color);
+                Vector2 pos = player->getPosition();
+                Vector2 size = player->getSize();
+                DrawRectangleV(pos, size, RED);
 
                 // Check if an enemy is near each tower.
                 for (int i = 0; i < (int)towers.size(); i++) {

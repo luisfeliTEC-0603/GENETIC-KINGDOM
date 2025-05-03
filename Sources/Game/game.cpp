@@ -3,9 +3,9 @@
 // #include "Pathfinding/aStar.cpp"
 
 void UpdateEnemy(Enemy& enemy, const Map& map) {
-    Vector2 newPosition = enemy.position;
+    Vector2 newPosition = enemy.getPosition();
     Vector2 velocity = {0, 0};
-    float speed = enemy.speed;
+    float speed = enemy.getSpeed();
     
     // Get input
     if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) velocity.x = speed;
@@ -21,7 +21,7 @@ void UpdateEnemy(Enemy& enemy, const Map& map) {
     bool canMove = true;
     
     // Enemy bounds
-    Rectangle EnemyRect = {newPosition.x, newPosition.y, enemy.size.x, enemy.size.y};
+    Rectangle EnemyRect = {newPosition.x, newPosition.y, enemy.getSize().x, enemy.getSize().y};
     
     // Check each cell around the Enemy
     for (int y = 0; y < map.height && canMove; y++) {
@@ -36,20 +36,20 @@ void UpdateEnemy(Enemy& enemy, const Map& map) {
     }
     
     // Also check bounds of the map
-    if (newPosition.x < 0 || newPosition.x + enemy.size.x > map.width * CELL_SIZE ||
-        newPosition.y < 0 || newPosition.y + enemy.size.y > map.height * CELL_SIZE) {
+    if (newPosition.x < 0 || newPosition.x + enemy.getSize().x > map.width * CELL_SIZE ||
+        newPosition.y < 0 || newPosition.y + enemy.getSize().y > map.height * CELL_SIZE) {
         canMove = false;
     }
     
     // Update position if no collision
     if (canMove) {
-        enemy.position = newPosition;
+        enemy.setPosition(newPosition);
     }
 }
 
-bool CheckWinCondition(const Enemy& Enemy, const Map& map) {
-    Rectangle EnemyRect = {Enemy.position.x, Enemy.position.y, Enemy.size.x, Enemy.size.y};
+bool CheckWinCondition(const Enemy& enemy, const Map& map) {
+    Rectangle enemyRect = {enemy.getPosition().x, enemy.getPosition().y, enemy.getSize().x, enemy.getSize().y};
     Rectangle goalRect = {map.goal.x * CELL_SIZE, map.goal.y * CELL_SIZE, (float)CELL_SIZE, (float)CELL_SIZE};
     
-    return CheckCollisionRecs(EnemyRect, goalRect);
+    return CheckCollisionRecs(enemyRect, goalRect);
 }
