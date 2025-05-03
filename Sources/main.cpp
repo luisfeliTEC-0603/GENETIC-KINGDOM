@@ -7,7 +7,7 @@
 #include "Game/game.hpp"
 #include "System/camera.hpp"
 
-// Towers
+// towersList
 #include "Tower/tower.hpp"
 #include "Tower/archer.hpp"
 #include "Tower/artillery.hpp"
@@ -20,12 +20,12 @@ int main() {
     const int screenHeight = 640;
 
     // Game objects
-    // Vector with towers that are on map and towerID to recognize each tower when deletting bullets
+    // Vector with towersList that are on map and towerID to recognize each tower when deletting bullets
 
-    vector<Tower*> towers = {};
+    vector<Tower*> towersList = {};
 
     // Vector with Enemies deployed on game map
-    vector<Enemy*> enemys = {};
+    vector<Enemy*> enemiesList = {};
 
     // Vector with current bullets on map
     vector<Bullet> bullets;
@@ -48,15 +48,9 @@ int main() {
     cameraController.Initialize(screenWidth, screenHeight, gameMap);
 
     // Enemy Sample -> gameEnemies.hpp
-    Enemy* player = new Enemy(
-        { (float)gameMap.start.x * CELL_SIZE + 32 * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2, 
-          (float)gameMap.start.y * CELL_SIZE + 20 * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2 },
-        { (float)PLAYER_SIZE, (float)PLAYER_SIZE },
-        PLAYER_COLOR, 
-        2.0f
-        ); 
+    Enemy* player = newEnemy(gameMap, { 32, 20 });
     
-    enemys.push_back(player); // This must be deleted since it is used for example. 
+    enemiesList.push_back(player); // This must be deleted since it is used for example. 
 
     // Type info variable <Set in Right Click>
     int cellValue = -1;
@@ -100,16 +94,16 @@ int main() {
 
             if (cellValue == 5) {
                 // Check which tower we are clicking
-                for (int i = 0; i < (int)towers.size(); i++) {
-                    if (towers[i]->getXpos() == (int)mouseCell.x && towers[i]->getYpos() == (int)mouseCell.y) {
+                for (int i = 0; i < (int)towersList.size(); i++) {
+                    if (towersList[i]->getXpos() == (int)mouseCell.x && towersList[i]->getYpos() == (int)mouseCell.y) {
 
-                        bool upg = UpgradeTower(towers[i]->getLevel());
-                        if (towers[i]->getLevel() == 0  && upg) {
+                        bool upg = UpgradeTower(towersList[i]->getLevel());
+                        if (towersList[i]->getLevel() == 0  && upg) {
 
                             if (coins.getCoinsAmount() >= 50) { // Check if there are enough coins available.
                                 coins.decreasCoins(50);
-                                towers[i]->Upgrade1();
-                                towers[i]->increaseLevel();
+                                towersList[i]->Upgrade1();
+                                towersList[i]->increaseLevel();
                                 break;
                             }
 
@@ -122,11 +116,11 @@ int main() {
 
                         }  
 
-                        if (towers[i]->getLevel() == 1  && upg) {
+                        if (towersList[i]->getLevel() == 1  && upg) {
                             if (coins.getCoinsAmount() >= 100) {
                                 coins.decreasCoins(100);
-                                towers[i]->Upgrade2();
-                                towers[i]->increaseLevel();
+                                towersList[i]->Upgrade2();
+                                towersList[i]->increaseLevel();
                                 break;
                             }
 
@@ -139,11 +133,11 @@ int main() {
 
                         }  
 
-                        if (towers[i]->getLevel() == 2  && upg) {
+                        if (towersList[i]->getLevel() == 2  && upg) {
                             if (coins.getCoinsAmount() >= 150) {
                                 coins.decreasCoins(150);
-                                towers[i]->Upgrade3();
-                                towers[i]->increaseLevel();
+                                towersList[i]->Upgrade3();
+                                towersList[i]->increaseLevel();
                                 break;
                             }
                             else{
@@ -155,7 +149,7 @@ int main() {
 
                         }  
 
-                        if (towers[i]->getLevel() >= 3) {
+                        if (towersList[i]->getLevel() >= 3) {
                             sprintf(messageText, "Torre al máximo nivel!");
                             showMessage = true;
                             messageStartTime = GetTime();
@@ -210,9 +204,9 @@ int main() {
                 DrawRectangleV(pos, size, RED);
 
                 // Check if an enemy is near each tower.
-                for (int i = 0; i < (int)towers.size(); i++) {
-                    DrawTower(gameMap, towers[i]->getXpos(), towers[i]->getYpos(), towers[i]->getType(), towers[i]->getVision());
-                    towers[i]->CheckIfEnemyesInRange(enemys, bullets, deltaTime);
+                for (int i = 0; i < (int)towersList.size(); i++) {
+                    DrawTower(gameMap, towersList[i]->getXpos(), towersList[i]->getYpos(), towersList[i]->getType(), towersList[i]->getVision());
+                    towersList[i]->CheckIfEnemyesInRange(enemiesList, bullets, deltaTime);
                 }
                 
                 // This is in case player wants to add a new tower, can be cancelled
@@ -222,17 +216,17 @@ int main() {
                         // Aquí haces lo que necesites con el botón presionado
                         if (result == 1) {
                             coins.decreasCoins(10);
-                            towers.push_back(new ArcherTower((int)mouseCell.x, (int)mouseCell.y, 5, 2, 7, 4, 1, 1, 1));
+                            towersList.push_back(new ArcherTower((int)mouseCell.x, (int)mouseCell.y, 5, 2, 7, 4, 1, 1, 1));
                             gameMap.grid[(int)mouseCell.y][(int)mouseCell.x] = 5; // 5 is an identificator that a tower has been asigned here.
                             // Archer Tower  
                         } else if (result == 2) {
                             coins.decreasCoins(10);
-                            towers.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 7, 1, 3, 5, 2, 2, 1));
+                            towersList.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 7, 1, 3, 5, 2, 2, 1));
                             gameMap.grid[(int)mouseCell.y][(int)mouseCell.x] = 5;
                             // Whizar Tower
                         } else if (result == 3) {
                             coins.decreasCoins(10);
-                            towers.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 10, 1, 3, 5, 2, 3, 1));
+                            towersList.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 10, 1, 3, 5, 2, 3, 1));
                             gameMap.grid[(int)mouseCell.y][(int)mouseCell.x] = 5;
                             // Artillery Tower
                         } else if (result == 4) {
@@ -286,6 +280,8 @@ int main() {
     }
 
     // Cleanup
+    for(Enemy* enemy : enemiesList) { delete enemy; }
+    for(Tower* tower : towersList) { delete tower; }
     UnloadAllTextures(); // Finalize Textures -> gameTextures.hpp
     UnloadRenderTexture(gameMap.renderTexture);
     CloseWindow();

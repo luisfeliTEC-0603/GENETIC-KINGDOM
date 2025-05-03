@@ -8,6 +8,7 @@
 #include "../Textures/gameTextures.hpp"
 #include "../Currency/currency.hpp"
 
+Enemy* newEnemy(const Map& map, const Vector2& start);
 void UpdateEnemy(Enemy& enemy, const Map& map);
 bool CheckWinCondition(const Enemy& enemy, const Map& map);
 

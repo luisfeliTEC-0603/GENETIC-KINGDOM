@@ -1,6 +1,17 @@
 #include "game.hpp"
 #include "raylib.h"
-// #include "Pathfinding/aStar.cpp"
+
+Enemy* newEnemy(const Map& map, const Vector2& start){
+    Enemy* enemy =  new Enemy(
+        { (float)start.x * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2, 
+          (float)start.y * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2 },
+        { (float)PLAYER_SIZE, (float)PLAYER_SIZE },
+        PLAYER_COLOR, 
+        2.0f
+        ); 
+
+    return enemy;
+}
 
 void UpdateEnemy(Enemy& enemy, const Map& map) {
     Vector2 newPosition = enemy.getPosition();
