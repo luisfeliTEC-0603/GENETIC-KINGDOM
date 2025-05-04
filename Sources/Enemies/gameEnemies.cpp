@@ -2,10 +2,11 @@
 
 Enemy::Enemy(Vector2 position_, 
              Vector2 size_, 
-             Color color_, 
+             Color color_,
+             EnemyType type_,
              float speed_
              )
-    : gridPosition(position_), size(size_), color(color_), speed(speed_) {}
+    : gridPosition(position_), size(size_), color(color_), type(type_), speed(speed_) {}
 
 EnemyType Enemy::getType() const { return type; }
 int Enemy::getHealth() const { return health; }

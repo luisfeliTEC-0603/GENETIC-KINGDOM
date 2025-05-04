@@ -8,7 +8,7 @@ void Coins::increasCoins(int numberToIncrease) {
     this->coins += numberToIncrease;
 }
 
-void Coins::decreasCoins(int numberToDecrease) {
+void Coins::decreaseCoins(int numberToDecrease) {
     this->coins -= numberToDecrease;
 }
 

@@ -1,14 +1,13 @@
 #include "tools.hpp"
-#include <stdexcept>
 
 // Initialize static members
 std::random_device RandomUtils::rd;
 std::mt19937 RandomUtils::gen(rd());
 
 void RandomUtils::init() {
-    // Seed the generator (done automatically in constructor)
+    gen.seed(rd()); 
+    gen.discard(1000);
 }
-
 int RandomUtils::randomInt(int min, int max) {
     std::uniform_int_distribution<> distrib(min, max);
     return distrib(gen);

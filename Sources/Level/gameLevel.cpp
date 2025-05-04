@@ -1,47 +1,39 @@
 #include "gameLevel.hpp"
 
-#include "../Textures/gameTextures.hpp"
-
 Map LoadMapFromSaves(const char* fileName) {
-    Map map; // Map -> gameLevel.hpp
-    std::ifstream file(fileName); // Open file in the current directory
+    Map map;
+    std::ifstream file(fileName);
     
-    if (!file.is_open()) { // Check if the file was open successfully
+    if (!file.is_open()) { 
         TraceLog(LOG_ERROR, "Failed to open map file");
         return map;
     }
 
-    std::string line; // Each row in the file is an array of char
-    int y = 0; // Column in the file
-    
-    while (std::getline(file, line)) { // While the file is still readable-line not empty
-
-        std::vector<int> row; // Row of numbers to include in the map-vector
-
-        for (size_t x = 0; x < line.size(); x++) { // Iterates for each char in line
-            
-            char c = line[x]; // Respective char
-
+    std::string line;
+    int y = 0;
+    while (std::getline(file, line)) {
+        std::vector<int> row;
+        row.reserve(line.size());
+        for (size_t x = 0; x < line.size(); x++) {
+            char c = line[x];
             switch (c) {
-
-                // Enemy-Walkable path -> 0
-                case ' ':
+                case ' ': // Default walkable path
                     row.push_back(0);
                     break;
-                case '#': // Wall
+                case '#': // Non-walkable
                     row.push_back(1);
                     break;
-                case '$':
+                case '$': // Special walkable path
                     row.push_back(2);
                     break;
-                case 'S': // Start
+                case 'S': // Starting position for enemies
                     row.push_back(0);
-                    map.start = {(float)x, (float)y};
+                    map.start.push_back({ (float)x, (float)y });
                     break;
-                case '*': // Front kin tower
+                case '*': // Special Structure
                     row.push_back(3);
                     break;
-                case 'G': // Goal
+                case 'G': // Goal position
                     row.push_back(4);
                     map.goal = {(float)x, (float)y};
                     break;
@@ -54,47 +46,57 @@ Map LoadMapFromSaves(const char* fileName) {
         y++;
     }
     
-    file.close(); // Close file
+    file.close(); 
     
-    if (map.grid.empty()) { // Checks map was read
+    if (map.grid.empty()) {
         TraceLog(LOG_ERROR, "Map is empty");
         return map;
     }
     
-    // Get map dimensions
-    map.height = map.grid.size();
-    map.width = map.grid[0].size();
+    map.width = static_cast<int>(map.grid[0].size());
+    map.height = static_cast<int>(map.grid.size());
 
     RenderMapTexture(map);
-    
     return map;
 }
 
 void RenderMapTexture(Map& map) {
-    InitTextures(); // Initialize all Textures -> gameTextures.hpp
+    // Ensure textures are loaded
+    InitTextures();
 
-    // Load map for render texture
-    map.renderTexture = LoadRenderTexture(map.width * CELL_SIZE, map.height * CELL_SIZE);
+    // Create render texture matching map dimensions
+    map.renderTexture = LoadRenderTexture(
+        map.width * CELL_SIZE, map.height * CELL_SIZE);
 
-    // Render map for texture
+   // Begin drawing to render texture
     BeginTextureMode(map.renderTexture);
-        ClearBackground(BLANK);  // Clear with transparent background
+        ClearBackground(BLANK);
 
-        // Iterates in the Map Matrix
+       // Render each cell in the map grid
         for (int y = 0; y < map.height; y++) {
             for (int x = 0; x < map.width; x++) {
-                Rectangle cell = {(float)x * CELL_SIZE, (float)y * CELL_SIZE, 
-                    (float)CELL_SIZE, (float)CELL_SIZE};
 
-                // Case to Render the respective Texture
+                // Cell rectangle in pixel coordinates
+                Rectangle cell = {
+                    static_cast<float>(x) * CELL_SIZE,
+                    static_cast<float>(y) * CELL_SIZE,
+                    static_cast<float>(CELL_SIZE),
+                    static_cast<float>(CELL_SIZE)
+                };
+
+                // Render based on cell type
                 switch (map.grid[y][x]) {
-                    case 0: // Ground
-                        DrawTexturePro(GameTextures::ground, { float(RandomUtils::randomInt(3,4)) * CELL_SIZE, 0, CELL_SIZE, CELL_SIZE }, 
+                    case 0: // Ground/Path
+                        DrawTexturePro(
+                            GameTextures::ground,
+                            { float(RandomUtils::randomInt(3,4)) * CELL_SIZE, 0, CELL_SIZE, CELL_SIZE }, 
                             cell, {0.0f, 0.0f}, 0.0f, WHITE);
                         break;
                     
-                    case 1: // Solid Ground
-                        DrawTexturePro(GameTextures::grass, { float(RandomUtils::randomInt(1,3) * CELL_SIZE), CELL_SIZE, CELL_SIZE, CELL_SIZE }, 
+                    case 1: // Grass/Tree
+                        DrawTexturePro(
+                            GameTextures::grass,
+                            { float(RandomUtils::randomInt(1,3) * CELL_SIZE), CELL_SIZE, CELL_SIZE, CELL_SIZE }, 
                             cell, {0.0f, 0.0f}, 0.0f, WHITE);
 
                         // 50% chance for a Tree
@@ -102,6 +104,7 @@ void RenderMapTexture(Map& map) {
                             DrawTexturePro(GameTextures::tree, { 
                                 float(RandomUtils::randomInt(0,3) * CELL_SIZE), 0, CELL_SIZE, CELL_SIZE }, 
                                 cell, {0.0f, 0.0f}, 0.0f, WHITE);
+                            break;
                         }
 
                         // 5% chance for a Cabin (independent of tree)
@@ -110,12 +113,16 @@ void RenderMapTexture(Map& map) {
                                 float(RandomUtils::randomInt(0,3) * CELL_SIZE),
                                 CELL_SIZE, CELL_SIZE }, 
                                 cell, {0.0f, 0.0f}, 0.0f, WHITE);
+                            break;
                         }
+
                         break;
 
-                    case 2: // Shore
-                        DrawTexturePro(GameTextures::shore, { float(RandomUtils::randomInt(2, 4) * CELL_SIZE), 
-                            0, CELL_SIZE, CELL_SIZE }, cell, {0.0f, 0.0f}, 0.0f, WHITE);
+                    case 2: // Shore/River
+                        DrawTexturePro(
+                            GameTextures::shore,
+                            { float(RandomUtils::randomInt(2, 4) * CELL_SIZE), 0, CELL_SIZE, CELL_SIZE },
+                            cell, {0.0f, 0.0f}, 0.0f, WHITE);
                         
                         // 1% chance for a Boat
                         if (RandomUtils::checkProbability(0.01)) {
@@ -123,26 +130,35 @@ void RenderMapTexture(Map& map) {
                                 CELL_SIZE, CELL_SIZE }, 
                                 cell, {0.0f, 0.0f}, 0.0f, WHITE);
                         }
+
                         break;
                     
                     case 3: // Kin Tower
-                        DrawTexturePro(GameTextures::kinTower, { CELL_SIZE, CELL_SIZE * 5, CELL_SIZE, CELL_SIZE }, 
+                        DrawTexturePro(
+                            GameTextures::kinTower, 
+                            { CELL_SIZE, CELL_SIZE * 5, CELL_SIZE, CELL_SIZE }, 
                             cell, {0.0f, 0.0f}, 0.0f, WHITE);
+
                         break;
                         
                     default:
                         break;
                 }
 
-                Rectangle keepCell = {
-                    (float)map.goal.x * CELL_SIZE - CELL_SIZE/2, 
-                    (float)map.goal.y * CELL_SIZE - CELL_SIZE/2,
+                Rectangle keepRect = {
+                    map.goal.x * CELL_SIZE - CELL_SIZE/2, 
+                    map.goal.y * CELL_SIZE - CELL_SIZE/2,
                     CELL_SIZE * 2, 
                     CELL_SIZE * 2
                 };
-                DrawTexturePro(GameTextures::keep, 
-                    {0, 0, CELL_SIZE * 2, CELL_SIZE * 2}, 
-                    keepCell, {0.0f, 0.0f}, 0.0f, WHITE);
+                DrawTexturePro(
+                    GameTextures::keep,
+                    {0, 0, CELL_SIZE * 2, CELL_SIZE * 2},
+                    keepRect,
+                    {0.0f, 0.0f},
+                    0.0f,
+                    WHITE
+                );
             }
         }
     EndTextureMode();
@@ -152,13 +168,11 @@ void RenderMapTexture(Map& map) {
 void DrawMap(const Map& map){
     if (!map.textureInitialized) return;
     
-    // Draw texture
     DrawTextureRec(
         map.renderTexture.texture,
         (Rectangle){0, 0, (float)map.renderTexture.texture.width, -(float)map.renderTexture.texture.height},
         (Vector2){0, 0},
-        WHITE
-    );
+        WHITE);
 }
 
 void DrawTower(const Map& map, int x, int y, int type, int visionTower) {

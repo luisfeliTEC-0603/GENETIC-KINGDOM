@@ -30,7 +30,7 @@ void Tower::ShootEnemy(Enemy& enemy, vector<Bullet>& bulletList) {
 }
 
 
-void Tower::CheckIfEnemyesInRange(vector<Enemy*>& enemies, vector<Bullet>& bulletList, float deltaTime) {
+void Tower::CheckIfEnemiesInRange(vector<Enemy*>& enemies, vector<Bullet>& bulletList, float deltaTime) {
 
   if (activeBullets >= 2 ) {
     timeSinceLastShot += deltaTime;

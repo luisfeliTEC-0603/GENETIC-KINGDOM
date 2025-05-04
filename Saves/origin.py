@@ -1,135 +1,179 @@
+"""
+Map Generator Module
+===================
+
+Generates procedural 2D grid-based maps with:
+- Random walk paths
+- Rivers
+- Central goal structure
+- Multiple entry points
+
+Usage example:
+    python3 origin.py --width=100 --height=50 --paths=50 --rivers=8 --output=map.txt
+"""
+
 import random
+from typing import List, Tuple
+import argparse
 
-def newMap(width, height):
-    return [['#' for _ in range(width)] for _ in range(height)]
+# Constants
+WALL = '#'
+PATH = ' '
+RIVER = '$'
+GOAL = 'G'
+DIRECTIONS = [(0, 1), (1, 0), (0, -1), (-1, 0), 
+              (1, 1), (-1, -1), (1, -1), (-1, 1)]
+MAX_ATTEMPTS = 100
 
-def newPath(grid, start_x, start_y, goal_x, goal_y, char):
-    directions = [(0, 1), (1, 0), (0, -1), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1)]
-    x, y = start_x, start_y
+def create_blank_map(width: int, height: int) -> List[List[str]]:
+    """Create a new map filled with walls.
+    
+    Args:
+        width: Map width in cells
+        height: Map height in cells
+    
+    Returns:
+        2D grid filled with wall characters
+    """
+    return [[WALL for _ in range(width)] for _ in range(height)]
 
-    attempt = 0
-    attempt_max = 100
-
-    # Randomly carve paths towards the goal
-    while (x != goal_x or y != goal_y) and (attempt < attempt_max):
-        random.shuffle(directions)
-        path = False
+def carve_path(grid: List[List[str]], start: Tuple[int, int], 
+               goal: Tuple[int, int], path_char: str, 
+               can_overwrite: List[str] = None) -> bool:
+    """Carve a path between two points using random walk.
+    
+    Args:
+        grid: The map grid to modify
+        start: (x, y) starting coordinates
+        goal: (x, y) target coordinates
+        path_char: Character to use for path
+        can_overwrite: List of characters that can be overwritten
+    
+    Returns:
+        True if path reached goal, False otherwise
+    """
+    if can_overwrite is None:
+        can_overwrite = [WALL]
+    
+    x, y = start
+    goal_x, goal_y = goal
+    attempts = 0
+    
+    while (x != goal_x or y != goal_y) and attempts < MAX_ATTEMPTS:
+        random.shuffle(DIRECTIONS)
+        path_found = False
         path_width = random.randint(1, 2)
         
-        for dx, dy in directions:
+        for dx, dy in DIRECTIONS:
             nx, ny = x + dx, y + dy
             
-            # Ensure limits
-            if 0 <= nx < len(grid[0]) and 0 <= ny < len(grid) and grid[ny][nx] == '#':
-                # Carve path (expand width)
+            if (0 <= nx < len(grid[0]) and 0 <= ny < len(grid) and 
+                grid[ny][nx] in can_overwrite):
+                
+                # Carve path with random width
                 for i in range(-path_width // 2, path_width // 2 + 1):
-                    if 0 <= nx + i < len(grid[0]) and 0 <= ny + i < len(grid):
-                        grid[ny + i][nx] = char
-                        grid[ny][nx + i] = char
-
-                # Move to next position
+                    if 0 <= nx + i < len(grid[0]):
+                        grid[ny][nx + i] = path_char
+                    if 0 <= ny + i < len(grid):
+                        grid[ny + i][nx] = path_char
+                
                 x, y = nx, ny
-                path = True
+                path_found = True
                 break
         
-        if not path:
-            attempt +=1
+        if not path_found:
+            attempts += 1
     
-    return grid
+    return x == goal_x and y == goal_y
 
-def newRiver(grid, start_x, start_y, goal_x, goal_y, char):
-    directions = [(0, 1), (1, 0), (0, -1), (-1, 0), (1, 1), (-1, -1), (1, -1), (-1, 1)]
-    x, y = start_x, start_y
-
-    attempt = 0
-    attempt_max = 100
-
-    # Randomly carve paths towards the goal
-    while (x != goal_x or y != goal_y) and (attempt < attempt_max):
-        random.shuffle(directions)
-        path = False
-        path_width = random.randint(1, 2)
-        
-        for dx, dy in directions:
-            nx, ny = x + dx, y + dy
-            
-            # Ensure limits
-            if 0 <= nx < len(grid[0]) and 0 <= ny < len(grid) and (grid[ny][nx] == '#' or grid[ny][nx] == ' '):
-                # Carve path (expand width)
-                for i in range(-path_width // 2, path_width // 2 + 1):
-                    if 0 <= nx + i < len(grid[0]) and 0 <= ny + i < len(grid):
-                        grid[ny + i][nx] = char
-                        grid[ny][nx + i] = char
-
-                # Move to next position
-                x, y = nx, ny
-                path = True
-                break
-        
-        if not path:
-            attempt +=1
+def add_goal(grid: List[List[str]], goal_size: Tuple[int, int]) -> bool:
+    """Add a goal structure to the center of the map.
     
-    return grid
-
-def AddGoal(grid, goal):
-
-    # Check Acceptable Dimensions between Matrixes 
-    if len(grid) < len(goal) or len(grid[0]) < len(goal[0]):
-        return
+    Args:
+        grid: The map grid to modify
+        goal_size: (width, height) of goal area
     
-    # Coordinates to Redraw the Grid
-    start_y = (len(grid) - len(goal)) // 2
-    start_x = (len(grid[0]) - len(goal)) // 2
+    Returns:
+        True if goal was placed, False if map was too small
+    """
+    goal_width, goal_height = goal_size
+    if len(grid[0]) < goal_width or len(grid) < goal_height:
+        return False
+    
+    start_x = (len(grid[0]) - goal_width) // 2
+    start_y = (len(grid) - goal_height) // 2
+    
+    for y in range(goal_height):
+        for x in range(goal_width):
+            if x == goal_width // 2 and y == goal_height // 2:
+                grid[start_y + y][start_x + x] = GOAL
+            else:
+                grid[start_y + y][start_x + x] = PATH
+    
+    return True
 
-    # Redrawing
-    for y in range(len(goal)):
-        for x in range(len(goal[0])):
-            grid[start_y + y][start_x + x] = goal[y][x] 
-
-def SaveFIle(grid, filename):
+def save_map(grid: List[List[str]], filename: str) -> None:
+    """Save map to a text file.
+    
+    Args:
+        grid: The map grid to save
+        filename: Output file path
+    """
     with open(filename, 'w') as f:
         for row in grid:
             f.write("".join(row) + "\n")
 
-def main():
-
-    # General Grid Parameters
-    width = 100
-    height = 50
-    goal_x = width // 2
-    goal_y = height // 2
-    numPaths = 35
-    numRiver = 5
-
-    # Goal Parameters
-    goal_width = int(width * 10 / 100) + 1
-    goal_height = int(height * 10 / 100)
-    goal = [[' ' for _ in range(goal_width)] for _ in range(goal_height)]
-    goal[goal_height // 2][goal_width // 2] = 'G'
+def generate_map(width: int = 100, height: int = 50, 
+                num_paths: int = 35, num_rivers: int = 5) -> List[List[str]]:
+    """Generate a complete map with paths, rivers and goal.
     
-    # Generate Grid
-    grid = newMap(width, height)
+    Args:
+        width: Map width in cells
+        height: Map height in cells
+        num_paths: Number of random paths to generate
+        num_rivers: Number of random rivers to generate
+    
+    Returns:
+        The generated map grid
+    """
+    grid = create_blank_map(width, height)
+    center = (width // 2, height // 2)
+    
+    # Main paths from edges
+    for start in [(width//2, 0), (0, height//2), 
+                 (width-1, height//2), (width//2, height-1)]:
+        carve_path(grid, start, center, PATH)
+    
+    # Random paths
+    for _ in range(num_paths):
+        start = (random.randint(0, width-1), random.randint(0, height-1))
+        carve_path(grid, start, center, PATH)
+    
+    # Rivers (can overwrite paths)
+    for _ in range(num_rivers):
+        start = (random.randint(0, width-1), random.randint(0, height-1))
+        carve_path(grid, start, center, RIVER, [WALL, PATH])
+    
+    # Add goal (10% of map size)
+    goal_size = (max(3, width//10), max(3, height//10))
+    add_goal(grid, goal_size)
+    
+    return grid
 
-    # Generate paths
-    grid = newPath(grid, width // 2, 0, goal_x, goal_y, ' ')  # From West
-    grid = newPath(grid, 0, height // 2, goal_x, goal_y, ' ')  # From East
-    grid = newPath(grid, width - 1, height // 2, goal_x, goal_y, ' ')  # From North
-    grid = newPath(grid, width // 2, height - 1, goal_x, goal_y, ' ')  # From South
-
-    for _ in range(numPaths):
-        grid = newPath(grid, random.randint(0, width-1), random.randint(0, height-1), goal_x, goal_y, ' ')
-
-    # Add Body of Water
-    grid = newRiver(grid, width // 2, 0, goal_x, goal_y, '$')  # From West
-    grid = newRiver(grid, 0, height // 2, goal_x, goal_y, '$')  # From East
-    grid = newRiver(grid, width - 1, height // 2, goal_x, goal_y, '$')  # From North
-    grid = newRiver(grid, width // 2, height - 1, goal_x, goal_y, '$')  # From South
-
-    # Add the Goal -exclusively in the middle-
-    AddGoal(grid, goal)
-
-    # Save the grid to a file
-    SaveFIle(grid, "map.txt")
+def main():
+    """Command line interface for map generation."""
+    parser = argparse.ArgumentParser(description="Generate procedural 2D maps")
+    parser.add_argument("--width", type=int, default=100, help="Map width")
+    parser.add_argument("--height", type=int, default=50, help="Map height")
+    parser.add_argument("--paths", type=int, default=35, help="Number of paths")
+    parser.add_argument("--rivers", type=int, default=5, help="Number of rivers")
+    parser.add_argument("--output", default="map.txt", help="Output filename")
+    args = parser.parse_args()
+    
+    print(f"Generating {args.width}x{args.height} map...")
+    map_grid = generate_map(args.width, args.height, args.paths, args.rivers)
+    save_map(map_grid, args.output)
+    print(f"Map saved to {args.output}")
 
 if __name__ == "__main__":
     main()

@@ -8,7 +8,7 @@ private:
 public:
     Coins();
     void increasCoins(int numberToIncrease);
-    void decreasCoins(int numberToDecrease);
+    void decreaseCoins(int numberToDecrease);
     int getCoinsAmount() const;
 };
 

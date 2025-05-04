@@ -1,5 +1,5 @@
 /** 
- *  @file gameEnemies.hpp
+ *  @file Sources/Enemies/gameEnemies.hpp
  *  @brief defines the Enemy class for enemy entities management 
  */
 
@@ -46,18 +46,18 @@ enum class EnemyType {
 class Enemy {
 private:
     // === Attributes ===
-
-    // stats
-    EnemyType type;
-    int health;
-    float speed;
-
+    
     // position & coordinates
     Vector2 gridPosition; 
 
     // rendering attributes
     Vector2 size;
     Color color;
+
+    // stats
+    EnemyType type;
+    int health;
+    float speed;
     
     // movement mechanics
     std::vector<Vector2> pathway;
@@ -65,9 +65,10 @@ private:
     float stepProgress = 0.0f;
 
 public:
-    Enemy(Vector2 gridPosition = Vector2(), 
+    Enemy(Vector2 position_ = Vector2(), 
           Vector2 size_ = Vector2(), 
-          Color color_ = Color(), 
+          Color color_ = Color(),
+          EnemyType type_ = EnemyType::Orc, 
           float speed_ = 1.0f
           );
 

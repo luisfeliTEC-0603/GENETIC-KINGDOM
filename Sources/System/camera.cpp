@@ -2,7 +2,9 @@
 
 void CameraController::Initialize(int screenWidth, int screenHeight, const Map& gameMap) {
     camera = { 0 };
-    camera.target = { // Center the camera in target
+
+     // center camera
+    camera.target = {
         (gameMap.width * CELL_SIZE) / 2.0f,
         (gameMap.height * CELL_SIZE) / 2.0f
     };
@@ -15,9 +17,6 @@ void CameraController::Initialize(int screenWidth, int screenHeight, const Map& 
 }
 
 void CameraController::Update(const Map& gameMap) {
-
-    // Based in RayLib Example:
-    // https://github.com/raysan5/raylib/blob/master/examples/core/core_2d_camera_mouse_zoom.c
 
     // Mouse Drag
     if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
@@ -39,9 +38,8 @@ void CameraController::Update(const Map& gameMap) {
     ClampToMap(gameMap);
 }
 
-void CameraController::ClampToMap(const Map& gameMap) { // Limits Stableshment for Drag Movement
+void CameraController::ClampToMap(const Map& gameMap) {
 
-    // Full Map Dimensions
     float mapWidth = gameMap.width * CELL_SIZE;
     float mapHeight = gameMap.height * CELL_SIZE;
     
@@ -79,4 +77,4 @@ Vector2 GetMouseCell(const Camera2D& camera, const Map& map) {
     return cellPos;
 }
 
-float CameraController::GetCameraZoom() { return camera.zoom; } // Gets Zoom in Camera
+float CameraController::GetCameraZoom() { return camera.zoom; }

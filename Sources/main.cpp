@@ -1,121 +1,73 @@
 #include "raylib.h"
 #include "rlgl.h"
 #include "raymath.h"
-#include <vector>
-#include <iostream>
 
 #include "Game/game.hpp"
 #include "System/camera.hpp"
 
-// towersList
+// Towers
 #include "Tower/tower.hpp"
 #include "Tower/archer.hpp"
 #include "Tower/artillery.hpp"
-#include "Tower/whizard.hpp"
+#include "Tower/wizard.hpp"
 
-// DEBUGING FUNCTIONS
-void DEBUG_map(const Map& map){
-    std::cout << "Map Dimensions: " << map.width << " x " << map.height << "\n";
-
-    std::cout << "Grid:\n";
-    for (int i = 0; i < map.height; ++i) {
-        for (int j = 0; j < map.width; ++j) {
-            std::cout << map.grid[i][j] << " ";
-        }
-        std::cout << "\n";
-    }
-
-    std::cout << "Start Position: (" << map.start.x << ", " << map.start.y << ")\n";
-    std::cout << "Goal Position: (" << map.goal.x << ", " << map.goal.y << ")\n";
-    std::cout << "Texture Initialized: " << (map.textureInitialized ? "Yes" : "No") << "\n";
-    std::cout << "Render Texture ID: " << map.renderTexture.id << "\n";
-}
-void DEBUG_Enemy(const Enemy* enemy){
-
-    std::cout << "Position: (" << enemy->getGridPosition().x << ", " << enemy->getGridPosition().y << ")\n";
-    std::cout << "Size: (" << enemy->getSize().x << ", " << enemy->getSize().y << ")\n";
-    std::cout << "Speed: " << enemy->getSpeed() << "\n";
-    std::cout << "Pathway: ";
-    for (const auto& point : enemy->getPathway()) {
-        std::cout << "(" << point.x << ", " << point.y << ") ";
-    }
-    std::cout << "\n";
-}
-
-// GAME
 int main() {
 
-    // Initialization
+    // === Environment Setup === 
     const int screenWidth = 1280;
     const int screenHeight = 640;
-
-    // Game objects
-    // Vector with towersList that are on map and towerID to recognize each tower when deletting bullets
-
-    vector<Tower*> towersList = {};
-
-    // Vector with Enemies deployed on game map
-    vector<Enemy*> enemiesList = {};
-
-    // Vector with current bullets on map
-    vector<Bullet> bullets;
-
-    // Currency of the game
-    Coins coins;
-    
     InitWindow(screenWidth, screenHeight, "CE2103");
-    
-    SetTargetFPS(60); // Set FPS
+    SetTargetFPS(60);
 
-    Map gameMap = LoadMapFromSaves("Saves/map.txt"); // Access Saved Files
+    // === Game Objects Initialization ===
+    vector<Tower*> towersList = {};
+    vector<Enemy*> enemiesList = {};
+    vector<Bullet> bullets;
+    Coins coins;
+
+    Map gameMap = LoadMapFromSaves("Saves/map.txt");
     if (gameMap.grid.empty()) {
         CloseWindow();
         return -1;
     }
-    DEBUG_map(gameMap);
-
-    // Initialize Camera -> System/camera.hpp
     CameraController cameraController;
     cameraController.Initialize(screenWidth, screenHeight, gameMap);
 
-    // Enemy Sample -> gameEnemies.hpp
-    Enemy* player = newEnemy(gameMap, { 77, 35 });
-    DEBUG_Enemy(player);
-    
-    enemiesList.push_back(player); // This must be deleted since it is used for example. 
+    // === Enemy Example ===
+    Enemy* player = newEnemy(gameMap, { 77, 35 }, EnemyType::Orc);
+    enemiesList.push_back(player);
 
-    // Type info variable <Set in Right Click>
-    int cellValue = -1;
+    // === Cell Info ===
+    int cellValue = 0;
 
-    // Game message vairables
+    // === Message Variables ===
     bool showMessage = false;
     float messageStartTime = 0;
     const float messageDuration = 2.0f;
     char messageText[64];
 
-    // Game Loop
+    // === GAME LOOP ===
     while (!WindowShouldClose()) {
 
-        // System----- (-> System/camera.hpp)
+        // === System Data ===
         cameraController.Update(gameMap);
         Vector2 mouseCell = GetMouseCell(cameraController.camera, gameMap);
-        float deltaTime = GetFrameTime(); // Iniciatize time, used for shooting logic 
+        float deltaTime = GetFrameTime();
 
-        // Game logic-----
+        // === Game Logic ===
         bool showTowerMenu = false;
 
-        // Check Collision
-        if (CheckWinCondition(*player, gameMap)) {
+        // Defeat Condition
+        if (CheckDefeatCondition(*player, gameMap)) {
             BeginDrawing();
                 ClearBackground(BLACK);
-                DrawText("You Win!", screenWidth/2 - 100, screenHeight/2 - 20, 40, GREEN);
+                DrawText("YOU DIED", screenWidth/2 - 100, screenHeight/2 - 20, 40, RED);
             EndDrawing();
             WaitTime(2);
             break;
         }
 
         if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
-
             // Access to cell info:
             cellValue = gameMap.grid[(int)mouseCell.y][(int)mouseCell.x];
             if (cellValue == 1) {
@@ -131,7 +83,7 @@ int main() {
                         if (towersList[i]->getLevel() == 0  && upg) {
 
                             if (coins.getCoinsAmount() >= 50) { // Check if there are enough coins available.
-                                coins.decreasCoins(50);
+                                coins.decreaseCoins(50);
                                 towersList[i]->Upgrade1();
                                 towersList[i]->increaseLevel();
                                 break;
@@ -148,7 +100,7 @@ int main() {
 
                         if (towersList[i]->getLevel() == 1  && upg) {
                             if (coins.getCoinsAmount() >= 100) {
-                                coins.decreasCoins(100);
+                                coins.decreaseCoins(100);
                                 towersList[i]->Upgrade2();
                                 towersList[i]->increaseLevel();
                                 break;
@@ -165,7 +117,7 @@ int main() {
 
                         if (towersList[i]->getLevel() == 2  && upg) {
                             if (coins.getCoinsAmount() >= 150) {
-                                coins.decreasCoins(150);
+                                coins.decreaseCoins(150);
                                 towersList[i]->Upgrade3();
                                 towersList[i]->increaseLevel();
                                 break;
@@ -190,7 +142,6 @@ int main() {
             }
         }
         
-        // Check bullets and its targets.
         for (int i = (int)bullets.size() - 1; i >= 0; --i) {
             Bullet& b = bullets[i];
         
@@ -217,9 +168,8 @@ int main() {
                 bullets.erase(bullets.begin() + i);
             }
         }
-        
-
-        // Graphics-----
+       
+        // === 
         BeginDrawing();
 
             ClearBackground(BLACK);
@@ -228,8 +178,9 @@ int main() {
             BeginMode2D(cameraController.camera);
 
                 DrawMap(gameMap);
-                UpdateEnemy(*player, GetFrameTime());
-                DrawPathway(*player, BLACK);
+                for(Enemy* enemy : enemiesList) {
+                    UpdateEnemy(enemy, deltaTime);
+                }
 
                 // Stuff from sample of enemy 
                 Vector2 pos = player->getWorldPosition();
@@ -239,7 +190,7 @@ int main() {
                 // Check if an enemy is near each tower.
                 for (int i = 0; i < (int)towersList.size(); i++) {
                     DrawTower(gameMap, towersList[i]->getXpos(), towersList[i]->getYpos(), towersList[i]->getType(), towersList[i]->getVision());
-                    towersList[i]->CheckIfEnemyesInRange(enemiesList, bullets, deltaTime);
+                    towersList[i]->CheckIfEnemiesInRange(enemiesList, bullets, deltaTime);
                 }
                 
                 // This is in case player wants to add a new tower, can be cancelled
@@ -248,22 +199,22 @@ int main() {
                     if (result != 0) {
                         // Aquí haces lo que necesites con el botón presionado
                         if (result == 1) {
-                            coins.decreasCoins(10);
+                            coins.decreaseCoins(10);
                             towersList.push_back(new ArcherTower((int)mouseCell.x, (int)mouseCell.y, 5, 2, 7, 4, 1, 1, 1));
                             gameMap.grid[(int)mouseCell.y][(int)mouseCell.x] = 5; // 5 is an identificator that a tower has been asigned here.
                             // Archer Tower  
                         } else if (result == 2) {
-                            coins.decreasCoins(10);
+                            coins.decreaseCoins(10);
                             towersList.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 7, 1, 3, 5, 2, 2, 1));
                             gameMap.grid[(int)mouseCell.y][(int)mouseCell.x] = 5;
                             // Whizar Tower
                         } else if (result == 3) {
-                            coins.decreasCoins(10);
+                            coins.decreaseCoins(10);
                             towersList.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 10, 1, 3, 5, 2, 3, 1));
                             gameMap.grid[(int)mouseCell.y][(int)mouseCell.x] = 5;
                             // Artillery Tower
                         } else if (result == 4) {
-                            // Cnancel
+                            // Cancel
                         }
                         showTowerMenu = false;
                     }
@@ -291,7 +242,6 @@ int main() {
 
             EndMode2D();
            
-
             // Data Collection-----
             DrawCircleV(GetMousePosition(), 4, DARKGRAY); // Exact Mouse Position
 
@@ -307,17 +257,15 @@ int main() {
             DrawTextEx(GetFontDefault(), TextFormat("cell [%i, %i]", (int)mouseCell.x, (int)mouseCell.y), 
                 Vector2Add(GetMousePosition(), (Vector2){ -44, 24 }), 20, 2, RED); // Data : Mouse in Cell
 
-            DrawTextEx(GetFontDefault(), TextFormat("cell-info [%i]", cellValue), 
-                Vector2Add(GetMousePosition(), (Vector2){ -44, 48 }), 20, 2, RED); // Data : Mouse in Cell
-
         EndDrawing();
     }
 
     // Cleanup
     for(Enemy* enemy : enemiesList) { delete enemy; }
     for(Tower* tower : towersList) { delete tower; }
-    UnloadAllTextures(); // Finalize Textures -> gameTextures.hpp
+    UnloadAllTextures();
     UnloadRenderTexture(gameMap.renderTexture);
     CloseWindow();
+    
     return 0;
 }
