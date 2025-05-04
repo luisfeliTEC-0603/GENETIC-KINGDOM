@@ -2,6 +2,7 @@
 #define GAME_HPP
 
 #include "raylib.h"
+#include <unordered_map> 
 
 #include "../Enemies/gameEnemies.hpp"
 #include "../Level/gameLevel.hpp"
@@ -13,7 +14,7 @@
 
 Enemy* newEnemy(const Map& map, const Vector2& start);
 void DrawPathway(const Enemy& enemy, Color pathColor);
-void UpdateEnemy(Enemy& enemy, const Map& map);
+void UpdateEnemy(Enemy& enemy, const float deltaTime);
 bool CheckWinCondition(const Enemy& enemy, const Map& map);
 
 #endif

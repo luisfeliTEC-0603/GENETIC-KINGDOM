@@ -28,7 +28,7 @@ bool AStarPathfinder::isPositionValid(const Vector2& pos, const std::vector<std:
     }
     
     // Check if walkable (0 means walkable in this convention)
-    bool valid = (grid[pos.y][pos.x] == 0) || (grid[pos.y][pos.x] == 4) ;
+    bool valid = (grid[pos.y][pos.x] == 0) || (grid[pos.y][pos.x] == 4) || (grid[pos.y][pos.x] == 2) ;
     std::cout << "Position valid: " << std::boolalpha << valid << "\n";
     return valid;
 }

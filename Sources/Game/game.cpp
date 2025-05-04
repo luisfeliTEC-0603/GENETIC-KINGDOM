@@ -13,7 +13,7 @@ Enemy* newEnemy(const Map& map, const Vector2& start) {
         start,
         { (float)ENEMY_SIZE, (float)ENEMY_SIZE },
         PLAYER_COLOR,
-        2.0f
+        50.0f
     );
 
     // Debug: Print enemy creation confirmation
@@ -125,18 +125,40 @@ void DrawPathway(const Enemy& enemy, Color pathColor) {
     }
 }
 
-void UpdateEnemy(Enemy& enemy, const Map& map) {
+void UpdateEnemy(Enemy& enemy, const float deltaTime) {
     std::vector<Vector2> path = enemy.getPathway();
+    if (path.empty()) return;
+
     float speed = enemy.getSpeed();
+    size_t index = enemy.getStep();
+    float progress = enemy.getStepProgress();
 
-    DrawPathway(enemy, BLACK);
+    if (path.size() > 1 && index < path.size() - 1) {
+        Vector2 current = path[index];
+        Vector2 next = path[index + 1];
 
-    for(int i = 0; i < (int)speed; i++){
-        if (!path.empty()) {
-            enemy.setWorldPosition(path[0]);
-            path.erase(path.begin()); 
-            enemy.setPathway(path);
+        float distance = Vector2Distance(current, next);
+        float moveAmount = speed * deltaTime;
+        progress += moveAmount / distance;
+
+        if (progress >= 1.0f) {
+            enemy.setStepProgress(0.0f);
+            enemy.setStep(index + 1);
+            
+            if (index + 1 >= path.size() - 1) {
+                enemy.setWorldPosition(path.back());
+                path.clear();
+                return;
+            }
+        } else {
+            Vector2 newPos = Vector2Lerp(current, next, progress);
+            enemy.setWorldPosition(newPos);
+            enemy.setStepProgress(progress);
         }
+
+    } else {
+        enemy.setWorldPosition(path.back());
+        path.clear();
     }
 }
 

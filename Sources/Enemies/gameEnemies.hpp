@@ -11,7 +11,10 @@ private:
     Vector2 size;
     Color color;
     float speed;
-   std::vector<Vector2> pathway;
+
+    std::vector<Vector2> pathway;
+    size_t step = 0;
+    float stepProgress = 0.0f;
 
 public:
     Enemy(Vector2 gridPosition = Vector2(), 
@@ -26,6 +29,8 @@ public:
     Vector2 getSize() const;
     float getSpeed() const;
     std::vector<Vector2> getPathway() const;
+    size_t getStep() const;
+    float getStepProgress() const;
 
     // Setters
     void setGridPosition(const Vector2& pos);
@@ -34,6 +39,8 @@ public:
     void setColor(const Color& newColor);
     void setSpeed(float newSpeed);
     void setPathway(const std::vector<Vector2>& newPathway);
+    void setStep(const size_t newStep);
+    void setStepProgress(const float newStepProgress);
 };
 
 #endif // ENEMY_H

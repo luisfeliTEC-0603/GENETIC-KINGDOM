@@ -79,7 +79,7 @@ int main() {
     cameraController.Initialize(screenWidth, screenHeight, gameMap);
 
     // Enemy Sample -> gameEnemies.hpp
-    Enemy* player = newEnemy(gameMap, { 32, 20 });
+    Enemy* player = newEnemy(gameMap, { 77, 35 });
     DEBUG_Enemy(player);
     
     enemiesList.push_back(player); // This must be deleted since it is used for example. 
@@ -228,7 +228,8 @@ int main() {
             BeginMode2D(cameraController.camera);
 
                 DrawMap(gameMap);
-                UpdateEnemy(*player, gameMap);
+                UpdateEnemy(*player, GetFrameTime());
+                DrawPathway(*player, BLACK);
 
                 // Stuff from sample of enemy 
                 Vector2 pos = player->getWorldPosition();
