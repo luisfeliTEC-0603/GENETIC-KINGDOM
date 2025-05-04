@@ -22,7 +22,7 @@ namespace GameTextures // Available Textures
 
 // Constant Parameters 
 const int CELL_SIZE = 16;
-const int PLAYER_SIZE = 12;
+const int ENEMY_SIZE = 16;
 
 const Color WALL_COLOR = DARKGRAY;
 const Color PATH_COLOR = RAYWHITE;

@@ -67,6 +67,7 @@ public:
     virtual void CheckIfEnemyesInRange(vector<Enemy*>& enemies, vector<Bullet>& bulletList, float deltaTime);
     virtual void ShootEnemy(Enemy& enemy, vector<Bullet>& bulletList);
 
+    virtual ~Tower() = default;
 
     //Getters and setters for the upgrades
     // Getters

@@ -6,12 +6,12 @@ Enemy* newEnemy(const Map& map, const Vector2& start) {
     std::cout << "\n===== Creating new Enemy =====\n";
     std::cout << "Start position (grid): (" << start.x << ", " << start.y << ")\n";
     std::cout << "Goal position (grid): (" << map.goal.x << ", " << map.goal.y << ")\n";
-    std::cout << "Player size: " << PLAYER_SIZE << "\n";
+    std::cout << "Player size: " << ENEMY_SIZE << "\n";
     std::cout << "Cell size: " << CELL_SIZE << "\n";
 
     Enemy* enemy = new Enemy(
         start,
-        { (float)PLAYER_SIZE, (float)PLAYER_SIZE },
+        { (float)ENEMY_SIZE, (float)ENEMY_SIZE },
         PLAYER_COLOR,
         2.0f
     );
@@ -37,8 +37,8 @@ Enemy* newEnemy(const Map& map, const Vector2& start) {
         
         for (const auto& gridPos : path) {
             Vector2 worldPos = {
-                gridPos.x * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2,
-                gridPos.y * CELL_SIZE + (CELL_SIZE - PLAYER_SIZE) / 2
+                gridPos.x * CELL_SIZE + (CELL_SIZE - ENEMY_SIZE) / 2,
+                gridPos.y * CELL_SIZE + (CELL_SIZE - ENEMY_SIZE) / 2
             };
             worldPath.push_back(worldPos);
 
@@ -85,68 +85,58 @@ void DrawPathway(const Enemy& enemy, Color pathColor) {
         return;
     }
 
+    // Draw path lines
     for (size_t i = 0; i < path.size() - 1; i++) {
         Vector2 start = {
-            path[i].x * CELL_SIZE + (CELL_SIZE - enemy.getSize().x) / 2,
-            path[i].y * CELL_SIZE + (CELL_SIZE - enemy.getSize().y) / 2
+            path[i].x + enemy.getSize().x/2,
+            path[i].y + enemy.getSize().y/2
         };
         Vector2 end = {
-            path[i+1].x * CELL_SIZE + (CELL_SIZE - enemy.getSize().x) / 2,
-            path[i+1].y * CELL_SIZE + (CELL_SIZE - enemy.getSize().y) / 2
+            path[i+1].x + enemy.getSize().x/2,
+            path[i+1].y + enemy.getSize().y/2
         };
         DrawLineEx(start, end, 2.0f, pathColor);
+    }
+
+    // Draw path points
+    for (const Vector2& point : path) {
+        Vector2 center = {
+            point.x + enemy.getSize().x/2,
+            point.y + enemy.getSize().y/2
+        };
+        DrawCircleV(center, 3.0f, pathColor);
+    }
+
+    // Draw start (green) and end (red) markers
+    if (!path.empty()) {
+        // Start marker
+        Vector2 start = {
+            path.front().x + enemy.getSize().x/2,
+            path.front().y + enemy.getSize().y/2
+        };
+        DrawCircleV(start, 5.0f, GREEN);
+        
+        // End marker
+        Vector2 end = {
+            path.back().x + enemy.getSize().x/2,
+            path.back().y + enemy.getSize().y/2
+        };
+        DrawCircleV(end, 5.0f, RED);
     }
 }
 
 void UpdateEnemy(Enemy& enemy, const Map& map) {
-    Vector2 newPosition = enemy.getWorldPosition();
-    Vector2 velocity = {0, 0};
+    std::vector<Vector2> path = enemy.getPathway();
     float speed = enemy.getSpeed();
 
     DrawPathway(enemy, BLACK);
-    
-    // Get input (with delta time for smooth movement)
-    if (IsKeyDown(KEY_RIGHT) || IsKeyDown(KEY_D)) velocity.x = speed;
-    if (IsKeyDown(KEY_LEFT) || IsKeyDown(KEY_A)) velocity.x = -speed;
-    if (IsKeyDown(KEY_UP) || IsKeyDown(KEY_W)) velocity.y = -speed;
-    if (IsKeyDown(KEY_DOWN) || IsKeyDown(KEY_S)) velocity.y = speed;
-    
-    // Calculate new position
-    newPosition.x += velocity.x;
-    newPosition.y += velocity.y;
-    
-    // Check collision with walls
-    bool canMove = true;
-    
-    // Enemy bounds in WORLD coordinates
-    Rectangle EnemyRect = {newPosition.x, newPosition.y, enemy.getSize().x, enemy.getSize().y};
 
-    // Check each cell around the Enemy
-    for (int y = 0; y < map.height && canMove; y++) {
-        for (int x = 0; x < map.width && canMove; x++) {
-            if (map.grid[y][x] == 1) { // If it's a wall
-                Rectangle wallRect = {
-                    (float)x * CELL_SIZE, 
-                    (float)y * CELL_SIZE, 
-                    (float)CELL_SIZE, 
-                    (float)CELL_SIZE
-                };
-                if (CheckCollisionRecs(EnemyRect, wallRect)) {
-                    canMove = false;
-                }
-            }
+    for(int i = 0; i < (int)speed; i++){
+        if (!path.empty()) {
+            enemy.setWorldPosition(path[0]);
+            path.erase(path.begin()); 
+            enemy.setPathway(path);
         }
-    }
-    
-    // Check world bounds
-    if (newPosition.x < 0 || newPosition.x + enemy.getSize().x > map.width * CELL_SIZE ||
-        newPosition.y < 0 || newPosition.y + enemy.getSize().y > map.height * CELL_SIZE) {
-        canMove = false;
-    }
-    
-    // Update position if no collision
-    if (canMove) {
-        enemy.setWorldPosition(newPosition);
     }
 }
 
