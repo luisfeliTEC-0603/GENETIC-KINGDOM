@@ -3,6 +3,8 @@
 
 #include <vector>
 #include "raylib.h"
+#include <fstream>
+#include <string>
 
 #include "../Utilities/tools.hpp"
 

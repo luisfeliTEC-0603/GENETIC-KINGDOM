@@ -6,6 +6,8 @@
 #include <queue>
 #include <algorithm>
 #include <cmath>
+#include <iostream>
+
 #include "raylib.h"
 #include "raymath.h"
 

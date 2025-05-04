@@ -7,28 +7,29 @@
 
 class Enemy {
 private:
-    Vector2 position;
+    Vector2 gridPosition; 
     Vector2 size;
     Color color;
     float speed;
    std::vector<Vector2> pathway;
 
 public:
-    Enemy(Vector2 position_ = Vector2(), 
+    Enemy(Vector2 gridPosition = Vector2(), 
           Vector2 size_ = Vector2(), 
           Color color_ = Color(), 
-          float speed_ = 1.0f,
-          std::vector<Vector2> pathway_ = {}
+          float speed_ = 1.0f
           );
 
     // Getters
-    Vector2 getPosition() const;
+    Vector2 getGridPosition() const;
+    Vector2 getWorldPosition() const;
     Vector2 getSize() const;
     float getSpeed() const;
     std::vector<Vector2> getPathway() const;
 
     // Setters
-    void setPosition(const Vector2& newPosition);
+    void setGridPosition(const Vector2& pos);
+    void setWorldPosition(const Vector2& pos);
     void setSize(const Vector2& newSize);
     void setColor(const Color& newColor);
     void setSpeed(float newSpeed);

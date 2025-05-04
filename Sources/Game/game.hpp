@@ -12,6 +12,7 @@
 #include "Pathfinding/aStar.hpp"
 
 Enemy* newEnemy(const Map& map, const Vector2& start);
+void DrawPathway(const Enemy& enemy, Color pathColor);
 void UpdateEnemy(Enemy& enemy, const Map& map);
 bool CheckWinCondition(const Enemy& enemy, const Map& map);
 

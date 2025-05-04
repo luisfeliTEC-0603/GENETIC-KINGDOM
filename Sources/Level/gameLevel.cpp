@@ -1,8 +1,5 @@
 #include "gameLevel.hpp"
 
-#include <fstream>
-#include <string>
-
 #include "../Textures/gameTextures.hpp"
 
 Map LoadMapFromSaves(const char* fileName) {

@@ -13,6 +13,36 @@
 #include "Tower/artillery.hpp"
 #include "Tower/whizard.hpp"
 
+// DEBUGING FUNCTIONS
+void DEBUG_map(const Map& map){
+    std::cout << "Map Dimensions: " << map.width << " x " << map.height << "\n";
+
+    std::cout << "Grid:\n";
+    for (int i = 0; i < map.height; ++i) {
+        for (int j = 0; j < map.width; ++j) {
+            std::cout << map.grid[i][j] << " ";
+        }
+        std::cout << "\n";
+    }
+
+    std::cout << "Start Position: (" << map.start.x << ", " << map.start.y << ")\n";
+    std::cout << "Goal Position: (" << map.goal.x << ", " << map.goal.y << ")\n";
+    std::cout << "Texture Initialized: " << (map.textureInitialized ? "Yes" : "No") << "\n";
+    std::cout << "Render Texture ID: " << map.renderTexture.id << "\n";
+}
+void DEBUG_Enemy(const Enemy* enemy){
+
+    std::cout << "Position: (" << enemy->getGridPosition().x << ", " << enemy->getGridPosition().y << ")\n";
+    std::cout << "Size: (" << enemy->getSize().x << ", " << enemy->getSize().y << ")\n";
+    std::cout << "Speed: " << enemy->getSpeed() << "\n";
+    std::cout << "Pathway: ";
+    for (const auto& point : enemy->getPathway()) {
+        std::cout << "(" << point.x << ", " << point.y << ") ";
+    }
+    std::cout << "\n";
+}
+
+// GAME
 int main() {
 
     // Initialization
@@ -42,6 +72,7 @@ int main() {
         CloseWindow();
         return -1;
     }
+    DEBUG_map(gameMap);
 
     // Initialize Camera -> System/camera.hpp
     CameraController cameraController;
@@ -49,12 +80,12 @@ int main() {
 
     // Enemy Sample -> gameEnemies.hpp
     Enemy* player = newEnemy(gameMap, { 32, 20 });
+    DEBUG_Enemy(player);
     
     enemiesList.push_back(player); // This must be deleted since it is used for example. 
 
     // Type info variable <Set in Right Click>
     int cellValue = -1;
-
 
     // Game message vairables
     bool showMessage = false;
@@ -71,7 +102,6 @@ int main() {
         float deltaTime = GetFrameTime(); // Iniciatize time, used for shooting logic 
 
         // Game logic-----
-        UpdateEnemy(*player, gameMap);
         bool showTowerMenu = false;
 
         // Check Collision
@@ -171,8 +201,8 @@ int main() {
             }
         
             // Distance between bullet and target
-            float dx = b.position.x - (b.selectedEnemy->getPosition().x + CELL_SIZE / 2);
-            float dy = b.position.y - (b.selectedEnemy->getPosition().y + CELL_SIZE / 2);
+            float dx = b.position.x - (b.selectedEnemy->getWorldPosition().x + CELL_SIZE / 2);
+            float dy = b.position.y - (b.selectedEnemy->getWorldPosition().y + CELL_SIZE / 2);
             float distance = sqrtf(dx * dx + dy * dy);
         
             // If it hits the enemy (set 5.0f as collision margin)
@@ -198,8 +228,10 @@ int main() {
             BeginMode2D(cameraController.camera);
 
                 DrawMap(gameMap);
+                UpdateEnemy(*player, gameMap);
+
                 // Stuff from sample of enemy 
-                Vector2 pos = player->getPosition();
+                Vector2 pos = player->getWorldPosition();
                 Vector2 size = player->getSize();
                 DrawRectangleV(pos, size, RED);
 
@@ -257,6 +289,7 @@ int main() {
                 }
 
             EndMode2D();
+           
 
             // Data Collection-----
             DrawCircleV(GetMousePosition(), 4, DARKGRAY); // Exact Mouse Position

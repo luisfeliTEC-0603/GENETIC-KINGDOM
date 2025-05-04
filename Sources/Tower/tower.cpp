@@ -17,7 +17,7 @@ void Tower::ShootEnemy(Enemy& enemy, vector<Bullet>& bulletList) {
     (float)ypos * CELL_SIZE + CELL_SIZE / 2
   };
 
-  Vector2 enemyPos = enemy.getPosition();
+  Vector2 enemyPos = enemy.getWorldPosition();
 
   Vector2 dir = {enemyPos.x + CELL_SIZE / 2 - towerPos.x, enemyPos.y + CELL_SIZE / 2 - towerPos.y}; //  + CELL_SIZE / 2  so it aims the center
 
@@ -52,12 +52,12 @@ void Tower::CheckIfEnemyesInRange(vector<Enemy*>& enemies, vector<Bullet>& bulle
   float towerPixelY = ypos * CELL_SIZE + CELL_SIZE / 2;
   
   for (Enemy* e : enemies) {
-      if (e->getPosition().x >= (xpos - scope) * CELL_SIZE && e->getPosition().x <= (xpos + scope) * CELL_SIZE &&
-          e->getPosition().y >= (ypos - scope) * CELL_SIZE && e->getPosition().y <= (ypos + scope) * CELL_SIZE) {
+      if (e->getWorldPosition().x >= (xpos - scope) * CELL_SIZE && e->getWorldPosition().x <= (xpos + scope) * CELL_SIZE &&
+          e->getWorldPosition().y >= (ypos - scope) * CELL_SIZE && e->getWorldPosition().y <= (ypos + scope) * CELL_SIZE) {
           
           // Calcular diferencia en X y Y
-          float dx = e->getPosition().x - towerPixelX;
-          float dy = e->getPosition().y - towerPixelY;
+          float dx = e->getWorldPosition().x - towerPixelX;
+          float dy = e->getWorldPosition().y - towerPixelY;
   
           // Determinar dirección
           if (std::abs(dx) > std::abs(dy)) {

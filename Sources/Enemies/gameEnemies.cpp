@@ -3,17 +3,20 @@
 Enemy::Enemy(Vector2 position_, 
              Vector2 size_, 
              Color color_, 
-             float speed_,
-             std::vector<Vector2> pathway_
+             float speed_
              )
-    : position(position_), size(size_), color(color_), speed(speed_), pathway(pathway_) {}
+    : gridPosition(position_), size(size_), color(color_), speed(speed_) {}
 
-Vector2 Enemy::getPosition() const { return position; }
+Vector2 Enemy::getGridPosition() const { return gridPosition; }
+Vector2 Enemy::getWorldPosition() const {
+    return { gridPosition.x * size.x, gridPosition.y * size.y };
+}
 Vector2 Enemy::getSize() const { return size; }
 float Enemy::getSpeed() const { return speed; }
 std::vector<Vector2> Enemy::getPathway() const { return pathway; }
 
-void Enemy::setPosition(const Vector2& newPosition) { position = newPosition; }
+void Enemy::setGridPosition(const Vector2& pos) { gridPosition = pos; }
+void Enemy::setWorldPosition(const Vector2& pos) { gridPosition = { pos.x / size.x, pos.y / size.y }; }
 void Enemy::setSize(const Vector2& newSize) { size = newSize; }
 void Enemy::setColor(const Color& newColor) { color = newColor; }
 void Enemy::setSpeed(float newSpeed) { speed = newSpeed; }
