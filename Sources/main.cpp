@@ -182,10 +182,10 @@ int main() {
                     UpdateEnemy(enemy, deltaTime);
                 }
 
-                // Stuff from sample of enemy 
-                Vector2 pos = player->getWorldPosition();
-                Vector2 size = player->getSize();
-                DrawRectangleV(pos, size, RED);
+                    // Stuff from sample of enemy 
+                // Vector2 pos = player->getWorldPosition();
+                  //  Vector2 size = player->getSize();
+                   // DrawRectangleV(pos, size, BLANK);
 
                 // Check if an enemy is near each tower.
                 for (int i = 0; i < (int)towersList.size(); i++) {

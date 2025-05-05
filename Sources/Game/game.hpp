@@ -36,6 +36,14 @@ Enemy* newEnemy(const Map& map, const Vector2& start, EnemyType type);
 void DrawPathway(const Enemy& enemy, Color pathColor);
 
 /**
+ * @def DrawEnemy
+ * @param enemy pointer to the enemy to draw
+ * 
+ * @brief display enemy in game
+ */
+void DrawEnemy(Enemy* enemy);
+
+/**
  * @def UpdateEnemy
  * @param enemy pointer to the enemy to update
  * @param deltaTime time since last frame (in seconds)

@@ -17,7 +17,7 @@ Texture2D GameTextures::kinTower;
 
 Texture2D GameTextures::orc;
 Texture2D GameTextures::darkMage;
-Texture2D GameTextures::minotaur;
+Texture2D GameTextures::undead;
 Texture2D GameTextures::assassin;
 
 void InitTextures(){
@@ -39,7 +39,7 @@ void InitTextures(){
 
     GameTextures::orc = LoadTexture("Assets/Enemies/Orc.png");
     GameTextures::darkMage = LoadTexture("Assets/Enemies/DarkMage.png");
-    GameTextures::minotaur = LoadTexture("Assets/Enemies/Minotaur.png");
+    GameTextures::undead = LoadTexture("Assets/Enemies/Undead.png");
     GameTextures::assassin = LoadTexture("Assets/Enemies/Assassin.png");
 }
 void UnloadAllTextures(){
@@ -61,6 +61,6 @@ void UnloadAllTextures(){
 
     UnloadTexture(GameTextures::orc);
     UnloadTexture(GameTextures::darkMage);
-    UnloadTexture(GameTextures::minotaur);
+    UnloadTexture(GameTextures::undead);
     UnloadTexture(GameTextures::assassin);
 }

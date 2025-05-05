@@ -12,13 +12,13 @@
 
 /**
  * @enum EnemyType
- * @brief Types of enemies with distinct attributes
+ * @brief types of enemies with distinct attributes
  * 
  * @var EnemyType::Orc
  * @brief resistance [archers], weakness [magic, artillery], speed [slow]  
  * @var EnemyType::DarkMage
  * @brief resistance [magic], weakness [archers, artillery], speed [fast] 
- * @var EnemyType::Minotaur
+ * @var EnemyType::Undead
  * @brief attackBy [magic, archers], speed [medium-slow] 
  * @var EnemyType::Assassin
  * @brief resistance [archers, artillery], weakness [magic], speed [medium-fast] 
@@ -27,8 +27,27 @@
 enum class EnemyType {
     Orc,
     DarkMage,
-    Minotaur,
+    Undead,
     Assassin
+};
+
+/**
+ * @enum EnemyDirection
+ * @brief direction face by he enemy while moving
+ * 
+ * @var EnemyDirection::down
+ * @var EnemyDirection::up
+ * @var EnemyDirection::right
+ * @var EnemyDirection::left
+ * 
+ * @note each type number matches with the respective vertical index in its texture 
+ */
+
+enum class EnemyDirection {
+    down = 0,
+    up = 1,
+    right = 2,
+    left = 3
 };
 
 /**
@@ -52,7 +71,7 @@ private:
 
     // rendering attributes
     Vector2 size;
-    Color color;
+    EnemyDirection dir;
 
     // stats
     EnemyType type;
@@ -66,18 +85,18 @@ private:
 
 public:
     Enemy(Vector2 position_ = Vector2(), 
-          Vector2 size_ = Vector2(), 
-          Color color_ = Color(),
+          Vector2 size_ = Vector2(),
           EnemyType type_ = EnemyType::Orc, 
           float speed_ = 1.0f
           );
 
    // === Getters ===
-    EnemyType getType() const;
+    EnemyType getType();
     int getHealth() const;
     Vector2 getGridPosition() const;
     Vector2 getWorldPosition() const;
     Vector2 getSize() const;
+    EnemyDirection getDirection() const;
     float getSpeed() const;
     std::vector<Vector2> getPathway() const;
     size_t getStep() const;
@@ -88,11 +107,13 @@ public:
     void setGridPosition(const Vector2& pos);
     void setWorldPosition(const Vector2& pos);
     void setSize(const Vector2& newSize);
-    void setColor(const Color& newColor);
+    void setDirection(EnemyDirection newDir);
     void setSpeed(float newSpeed);
     void setPathway(const std::vector<Vector2>& newPathway);
     void setStep(const size_t newStep);
     void setStepProgress(const float newStepProgress);
+
+    // == Animation ==
 };
 
 #endif // ENEMY_H

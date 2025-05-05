@@ -35,7 +35,7 @@ namespace GameTextures {
     // === Enemy Textures ===
     extern Texture2D orc;
     extern Texture2D darkMage;
-    extern Texture2D minotaur;
+    extern Texture2D undead;
     extern Texture2D assassin;
 }
 

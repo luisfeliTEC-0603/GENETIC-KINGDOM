@@ -5,7 +5,6 @@ Enemy* newEnemy(const Map& map, const Vector2& start, EnemyType type) {
     Enemy* enemy = new Enemy(
         start,
         { (float)ENEMY_SIZE, (float)ENEMY_SIZE },
-        PLAYER_COLOR,
         type,
         50.0f
     );
@@ -61,6 +60,44 @@ void DrawPathway(const Enemy& enemy, Color pathColor) {
     }
 }
 
+void DrawEnemy(Enemy* enemy) {
+
+    Vector2 pos = enemy->getWorldPosition();
+    Vector2 size = enemy->getSize();
+
+    Rectangle rect = {
+        pos.x, pos.y,
+        size.x, size.y
+    };
+
+    Texture2D texture;
+    switch (enemy->getType()) {
+        case EnemyType::Orc:
+            texture =  GameTextures::orc;
+            break;
+        
+        case EnemyType::DarkMage:
+            texture =  GameTextures::darkMage;
+            break;
+
+        case EnemyType::Undead:
+            texture =  GameTextures::undead;
+            break;
+
+        case EnemyType::Assassin:
+            texture =  GameTextures::assassin;
+            break;
+        
+        default:
+            break;
+    }
+
+    DrawTexturePro(
+        texture,
+        {size.x, size.y *static_cast<int>(enemy->getDirection()), size.x, size.y }, 
+        rect, {0.0f, 0.0f}, 0.0f, WHITE);
+}
+
 void UpdateEnemy(Enemy* enemy, const float deltaTime) {
     std::vector<Vector2> path = enemy->getPathway();
     if (path.empty()) return;
@@ -69,9 +106,27 @@ void UpdateEnemy(Enemy* enemy, const float deltaTime) {
     size_t index = enemy->getStep();
     float progress = enemy->getStepProgress();
 
+    DrawEnemy(enemy);
+
     if (path.size() > 1 && index < path.size() - 1) {
         Vector2 current = path[index];
         Vector2 next = path[index + 1];
+
+        Vector2 direction = Vector2Normalize(Vector2Subtract(next, current));
+        EnemyDirection eDir;
+        
+        if (direction.x > 0.7f)        eDir = EnemyDirection::right;
+        else if (direction.x < -0.7f)  eDir = EnemyDirection::left;
+        else if (direction.y > 0.7f)   eDir = EnemyDirection::down;
+        else if (direction.y < -0.7f)  eDir = EnemyDirection::up;
+        else {
+            if (fabs(direction.x) > fabs(direction.y)) {
+                eDir = (direction.x > 0) ? EnemyDirection::right : EnemyDirection::left;
+            } else {
+                eDir = (direction.y > 0) ? EnemyDirection::down : EnemyDirection::up;
+            }
+        }
+        enemy->setDirection(eDir);
 
         float distance = Vector2Distance(current, next);
         float moveAmount = speed * deltaTime;
