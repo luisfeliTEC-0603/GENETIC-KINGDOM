@@ -35,14 +35,14 @@ int main() {
     cameraController.Initialize(screenWidth, screenHeight, gameMap);
 
     // === Enemy Example ===
-    //Enemy* orc = newEnemy(gameMap, { 10, 10 }, EnemyType::Orc); // inicial pos og { 77, 35 }
-    //enemiesList.push_back(orc);
-    //Enemy* mage = newEnemy(gameMap, { 21, 20 }, EnemyType::DarkMage);
-    //enemiesList.push_back(mage);
-    //Enemy* john_darkSouls = newEnemy(gameMap, { 42, 6 }, EnemyType::Undead);
-    //enemiesList.push_back(john_darkSouls);
-    //Enemy* ezio  = newEnemy(gameMap, { 59, 48 }, EnemyType::Assassin);
-    //enemiesList.push_back(ezio);
+    Enemy* orc = newEnemy(gameMap, { 10, 10 }, EnemyType::Orc); // inicial pos og { 77, 35 }
+    enemiesList.push_back(orc);
+    Enemy* mage = newEnemy(gameMap, { 21, 20 }, EnemyType::DarkMage);
+    enemiesList.push_back(mage);
+    Enemy* john_darkSouls = newEnemy(gameMap, { 42, 6 }, EnemyType::Undead);
+    enemiesList.push_back(john_darkSouls);
+    Enemy* ezio  = newEnemy(gameMap, { 59, 48 }, EnemyType::Assassin);
+    enemiesList.push_back(ezio);
 
     // === Cell Info ===
     int cellValue = 0;
@@ -220,27 +220,34 @@ int main() {
                 // This is in case player wants to add a new tower, can be cancelled
                 if (showTowerMenu) {
                     int result = ShowScreen();
-                    if (result != 0) {
-                        // Aquí haces lo que necesites con el botón presionado
-                        if (result == 1) {
-                            coins.decreaseCoins(10);
-                            towersList.push_back(new ArcherTower((int)mouseCell.x, (int)mouseCell.y, 5, 2, 7, 4, 1, 1, 1));
-                            gameMap.grid[(int)mouseCell.y][(int)mouseCell.x] = 5; // 5 is an identificator that a tower has been asigned here.
-                            // Archer Tower  
-                        } else if (result == 2) {
-                            coins.decreaseCoins(10);
-                            towersList.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 7, 1, 3, 5, 2, 2, 1));
-                            gameMap.grid[(int)mouseCell.y][(int)mouseCell.x] = 5;
-                            // Whizar Tower
-                        } else if (result == 3) {
-                            coins.decreaseCoins(10);
-                            towersList.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 10, 1, 3, 5, 2, 3, 1));
-                            gameMap.grid[(int)mouseCell.y][(int)mouseCell.x] = 5;
-                            // Artillery Tower
-                        } else if (result == 4) {
-                            // Cancel
+                    if (coins.getCoinsAmount() < 10) {
+                        sprintf(messageText, "No tienes suficientes monedas!");
+                        showMessage = true;
+                        messageStartTime = GetTime();
+                    }
+                    else {
+                        if (result != 0) {
+                            // Aquí haces lo que necesites con el botón presionado
+                            if (result == 1) {
+                                coins.decreaseCoins(10);
+                                towersList.push_back(new ArcherTower((int)mouseCell.x, (int)mouseCell.y, 5, 2, 7, 4, 1, 1, 1));
+                                gameMap.grid[(int)mouseCell.y][(int)mouseCell.x] = 5; // 5 is an identificator that a tower has been asigned here.
+                                // Archer Tower  
+                            } else if (result == 2) {
+                                coins.decreaseCoins(10);
+                                towersList.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 7, 1, 3, 5, 2, 2, 1));
+                                gameMap.grid[(int)mouseCell.y][(int)mouseCell.x] = 5;
+                                // Whizar Tower
+                            } else if (result == 3) {
+                                coins.decreaseCoins(10);
+                                towersList.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 10, 1, 3, 5, 2, 3, 1));
+                                gameMap.grid[(int)mouseCell.y][(int)mouseCell.x] = 5;
+                                // Artillery Tower
+                            } else if (result == 4) {
+                                // Cancel
+                            }
+                            showTowerMenu = false;
                         }
-                        showTowerMenu = false;
                     }
                 }
 
