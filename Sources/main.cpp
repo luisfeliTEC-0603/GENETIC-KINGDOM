@@ -35,8 +35,8 @@ int main() {
     cameraController.Initialize(screenWidth, screenHeight, gameMap);
 
     // === Enemy Example ===
-    Enemy* orc = newEnemy(gameMap, { 10, 10 }, EnemyType::Orc); // inicial pos og { 77, 35 }
-    enemiesList.push_back(orc);
+    //Enemy* orc = newEnemy(gameMap, { 10, 10 }, EnemyType::Orc); // inicial pos og { 77, 35 }
+    //enemiesList.push_back(orc);
     //Enemy* mage = newEnemy(gameMap, { 21, 20 }, EnemyType::DarkMage);
     //enemiesList.push_back(mage);
     //Enemy* john_darkSouls = newEnemy(gameMap, { 42, 6 }, EnemyType::Undead);
@@ -77,6 +77,26 @@ int main() {
                 dead = true;
             }
         }
+
+        // Logic to display game information
+        if (IsKeyPressed(KEY_M)) {
+
+            // Get towers information
+            info.towers = {{{1, 0, 0, 0}, {2, 0, 0, 0}, {3, 0, 0, 0}}};
+            for (int i = 0; i < (int)towersList.size(); i++) {
+                int towerType = towersList[i]->getType();   
+                int towerLevel = towersList[i]->getLevel() + 1; 
+
+                if (towerType >= 1 && towerType <= 3 && towerLevel >= 1 && towerLevel <= 3) {
+                    info.towers[towerType - 1][towerLevel]++;
+                }
+            }
+
+            // Display screen 
+            ShowInformationScreen(info);
+            info.towers = {{{1, 0, 0, 0}, {2, 0, 0, 0}, {3, 0, 0, 0}}};
+        }
+
 
         if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
             // Access to cell info:
