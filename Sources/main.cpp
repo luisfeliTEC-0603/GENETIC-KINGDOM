@@ -34,8 +34,14 @@ int main() {
     cameraController.Initialize(screenWidth, screenHeight, gameMap);
 
     // === Enemy Example ===
-    Enemy* player = newEnemy(gameMap, { 77, 35 }, EnemyType::Undead);
-    enemiesList.push_back(player);
+    Enemy* orc = newEnemy(gameMap, { 77, 35 }, EnemyType::Orc);
+    enemiesList.push_back(orc);
+    Enemy* mage = newEnemy(gameMap, { 21, 20 }, EnemyType::DarkMage);
+    enemiesList.push_back(mage);
+    Enemy* john_darkSouls = newEnemy(gameMap, { 42, 6 }, EnemyType::Undead);
+    enemiesList.push_back(john_darkSouls);
+    Enemy* ezio  = newEnemy(gameMap, { 59, 48 }, EnemyType::Assassin);
+    enemiesList.push_back(ezio);
 
     // === Cell Info ===
     int cellValue = 0;
@@ -47,7 +53,8 @@ int main() {
     char messageText[64];
 
     // === GAME LOOP ===
-    while (!WindowShouldClose()) {
+    bool dead = false;
+    while (!WindowShouldClose() && !dead) {
 
         // === System Data ===
         cameraController.Update(gameMap);
@@ -58,13 +65,16 @@ int main() {
         bool showTowerMenu = false;
 
         // Defeat Condition
-        if (CheckDefeatCondition(*player, gameMap)) {
-            BeginDrawing();
-                ClearBackground(BLACK);
-                DrawText("YOU DIED", screenWidth/2 - 100, screenHeight/2 - 20, 40, RED);
-            EndDrawing();
-            WaitTime(2);
-            break;
+        for(Enemy* enemy : enemiesList){
+            if (CheckDefeatCondition(*enemy, gameMap)) {
+                BeginDrawing();
+                    ClearBackground(BLACK);
+                    DrawText("YOU DIED", screenWidth/2 - 100, screenHeight/2 - 20, 40, RED);
+                EndDrawing();
+                WaitTime(2);
+
+                dead = true;
+            }
         }
 
         if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {

@@ -72,24 +72,10 @@ void DrawEnemy(Enemy* enemy) {
 
     Texture2D texture;
     switch (enemy->getType()) {
-        case EnemyType::Orc:
-            texture =  GameTextures::orc;
-            break;
-        
-        case EnemyType::DarkMage:
-            texture =  GameTextures::darkMage;
-            break;
-
-        case EnemyType::Undead:
-            texture =  GameTextures::undead;
-            break;
-
-        case EnemyType::Assassin:
-            texture =  GameTextures::assassin;
-            break;
-        
-        default:
-            break;
+        case EnemyType::Orc: texture = GameTextures::orc; break;
+        case EnemyType::DarkMage: texture = GameTextures::darkMage; break;
+        case EnemyType::Undead: texture = GameTextures::undead; break;
+        case EnemyType::Assassin: texture = GameTextures::assassin; break;
     }
 
     DrawTexturePro(
@@ -108,9 +94,12 @@ void UpdateEnemy(Enemy* enemy, const float deltaTime) {
    
     DrawEnemy(enemy);
 
-    int actionIndex = enemy->getWalkFrame();
-    actionIndex = (actionIndex >= 4) ? 0 : actionIndex + 1;
-    enemy->setWalkFrame(actionIndex);
+    static int animCounter = 0;
+    static const int slowFactor = 5;
+    if (++animCounter >= slowFactor) {
+        enemy->setWalkFrame((enemy->getWalkFrame() + 1) % 5);
+        animCounter = 0;
+    }
 
     if (path.size() > 1 && index < path.size() - 1) {
         Vector2 current = path[index];

@@ -90,7 +90,7 @@ public:
     Enemy(Vector2 position_ = Vector2(), 
           Vector2 size_ = Vector2(),
           EnemyType type_ = EnemyType::Orc, 
-          float speed_ = 1.0f
+          float speed_ = 0.1f
           );
 
    // === Getters ===
