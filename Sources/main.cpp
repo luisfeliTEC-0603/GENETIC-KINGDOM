@@ -24,6 +24,7 @@ int main() {
     vector<Enemy*> enemiesList = {};
     vector<Bullet> bullets;
     Coins coins;
+    Information info;
 
     Map gameMap = LoadMapFromSaves("Saves/map.txt");
     if (gameMap.grid.empty()) {
@@ -34,14 +35,14 @@ int main() {
     cameraController.Initialize(screenWidth, screenHeight, gameMap);
 
     // === Enemy Example ===
-    Enemy* orc = newEnemy(gameMap, { 77, 35 }, EnemyType::Orc);
-    enemiesList.push_back(orc);
-    Enemy* mage = newEnemy(gameMap, { 21, 20 }, EnemyType::DarkMage);
-    enemiesList.push_back(mage);
-    Enemy* john_darkSouls = newEnemy(gameMap, { 42, 6 }, EnemyType::Undead);
-    enemiesList.push_back(john_darkSouls);
-    Enemy* ezio  = newEnemy(gameMap, { 59, 48 }, EnemyType::Assassin);
-    enemiesList.push_back(ezio);
+    //Enemy* orc = newEnemy(gameMap, { 10, 10 }, EnemyType::Orc); // inicial pos og { 77, 35 }
+    //enemiesList.push_back(orc);
+    //Enemy* mage = newEnemy(gameMap, { 21, 20 }, EnemyType::DarkMage);
+    //enemiesList.push_back(mage);
+    //Enemy* john_darkSouls = newEnemy(gameMap, { 42, 6 }, EnemyType::Undead);
+    //enemiesList.push_back(john_darkSouls);
+    //Enemy* ezio  = newEnemy(gameMap, { 59, 48 }, EnemyType::Assassin);
+    //enemiesList.push_back(ezio);
 
     // === Cell Info ===
     int cellValue = 0;
@@ -76,6 +77,26 @@ int main() {
                 dead = true;
             }
         }
+
+        // Logic to display game information
+        if (IsKeyPressed(KEY_M)) {
+
+            // Get towers information
+            info.towers = {{{1, 0, 0, 0}, {2, 0, 0, 0}, {3, 0, 0, 0}}};
+            for (int i = 0; i < (int)towersList.size(); i++) {
+                int towerType = towersList[i]->getType();   
+                int towerLevel = towersList[i]->getLevel() + 1; 
+
+                if (towerType >= 1 && towerType <= 3 && towerLevel >= 1 && towerLevel <= 3) {
+                    info.towers[towerType - 1][towerLevel]++;
+                }
+            }
+
+            // Display screen 
+            ShowInformationScreen(info);
+            info.towers = {{{1, 0, 0, 0}, {2, 0, 0, 0}, {3, 0, 0, 0}}};
+        }
+
 
         if (IsMouseButtonPressed(MOUSE_BUTTON_RIGHT)) {
             // Access to cell info:
@@ -227,9 +248,13 @@ int main() {
                 for (int i = 0; i < (int)bullets.size(); i++) {
                     bullets[i].position.x += bullets[i].direction.x * bullets[i].speed;
                     bullets[i].position.y += bullets[i].direction.y * bullets[i].speed;
-                
-                    // Draw bullets
-                    DrawCircleV(bullets[i].position, 2, WHITE);
+                    // Draw bullets depending on its type
+                    if (bullets[i].type == 1) {
+                        DrawCircleV(bullets[i].position, 2, BLACK);
+                    }
+                    else {
+                        DrawCircleV(bullets[i].position, 2, WHITE);
+                    }
                 
                 }
 

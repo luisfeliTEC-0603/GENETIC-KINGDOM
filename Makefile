@@ -16,6 +16,7 @@ TOWER_SRCS := Sources/Tower/archer.cpp Sources/Tower/wizard.cpp \
 CURRENCY_SRCS := Sources/Currency/currency.cpp
 UTILS_SRCS := Sources/Utilities/tools.cpp
 ENEMY_SRCS := Sources/Enemies/gameEnemies.cpp
+INFO_DISPL := Sources/UIElements/InformationScreen/InformationScreen.cpp
 
 # Combine sources
 ALL_SRCS := Sources/main.cpp \
@@ -27,7 +28,8 @@ ALL_SRCS := Sources/main.cpp \
             $(TOWER_SRCS) \
             $(CURRENCY_SRCS) \
             $(UTILS_SRCS) \
-            $(ENEMY_SRCS)
+            $(ENEMY_SRCS) \
+            $(INFO_DISPL)
 
 # Build Rules
 all: $(TARGET)
