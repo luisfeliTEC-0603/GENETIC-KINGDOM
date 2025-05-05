@@ -19,6 +19,7 @@ float Enemy::getSpeed() const { return speed; }
 std::vector<Vector2> Enemy::getPathway() const { return pathway; }
 size_t Enemy::getStep() const { return step; }
 float Enemy::getStepProgress() const { return stepProgress; }
+int Enemy::getWalkFrame() const { return walkFrame; }
 
 void Enemy::setHealth(int newHealth) { health = newHealth; }
 void Enemy::setGridPosition(const Vector2& pos) { gridPosition = pos; }
@@ -29,3 +30,4 @@ void Enemy::setSpeed(float newSpeed) { speed = newSpeed; }
 void Enemy::setPathway(const std::vector<Vector2>& newPathway) { pathway = newPathway; }
 void Enemy::setStep(const size_t newStep) { step = newStep; }
 void Enemy::setStepProgress(const float newStepProgress) { stepProgress = newStepProgress; }
+void Enemy::setWalkFrame(const int newStep) { walkFrame = newStep; }

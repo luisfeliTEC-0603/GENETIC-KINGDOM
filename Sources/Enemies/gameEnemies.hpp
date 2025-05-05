@@ -56,10 +56,12 @@ enum class EnemyDirection {
  * 
  * @param gridPosition : (x, y) grid based position of the object
  * @param size : (width, height) in pixels
+ * @param dir : directio the enemy es facing
  * @param speed : movement multiplier (recommended : speed > 30)
  * @param pathway : sequence of grid positions defining the movement path
  * @param step : current index in pathway
  * @param setProgress : progress (0.0 to 1.0) between current and next step
+ * @param walkingStep : index of event in the texture
  */
 
 class Enemy {
@@ -82,6 +84,7 @@ private:
     std::vector<Vector2> pathway;
     size_t step = 0;
     float stepProgress = 0.0f;
+    int walkFrame = 0;
 
 public:
     Enemy(Vector2 position_ = Vector2(), 
@@ -101,6 +104,7 @@ public:
     std::vector<Vector2> getPathway() const;
     size_t getStep() const;
     float getStepProgress() const;
+    int getWalkFrame() const;
 
     // === Setters ===
     void setHealth(int newHealth);
@@ -112,8 +116,7 @@ public:
     void setPathway(const std::vector<Vector2>& newPathway);
     void setStep(const size_t newStep);
     void setStepProgress(const float newStepProgress);
-
-    // == Animation ==
+    void setWalkFrame(int newStep);
 };
 
 #endif // ENEMY_H

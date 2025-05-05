@@ -34,7 +34,7 @@ int main() {
     cameraController.Initialize(screenWidth, screenHeight, gameMap);
 
     // === Enemy Example ===
-    Enemy* player = newEnemy(gameMap, { 77, 35 }, EnemyType::Orc);
+    Enemy* player = newEnemy(gameMap, { 77, 35 }, EnemyType::Undead);
     enemiesList.push_back(player);
 
     // === Cell Info ===
@@ -169,9 +169,7 @@ int main() {
             }
         }
        
-        // === 
         BeginDrawing();
-
             ClearBackground(BLACK);
             
             // Sets Camera in 2D Mode
@@ -181,11 +179,6 @@ int main() {
                 for(Enemy* enemy : enemiesList) {
                     UpdateEnemy(enemy, deltaTime);
                 }
-
-                    // Stuff from sample of enemy 
-                // Vector2 pos = player->getWorldPosition();
-                  //  Vector2 size = player->getSize();
-                   // DrawRectangleV(pos, size, BLANK);
 
                 // Check if an enemy is near each tower.
                 for (int i = 0; i < (int)towersList.size(); i++) {

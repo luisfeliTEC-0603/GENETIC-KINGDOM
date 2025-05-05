@@ -94,7 +94,7 @@ void DrawEnemy(Enemy* enemy) {
 
     DrawTexturePro(
         texture,
-        {size.x, size.y *static_cast<int>(enemy->getDirection()), size.x, size.y }, 
+        {size.x * enemy->getWalkFrame(), size.y *static_cast<int>(enemy->getDirection()), size.x, size.y }, 
         rect, {0.0f, 0.0f}, 0.0f, WHITE);
 }
 
@@ -105,8 +105,12 @@ void UpdateEnemy(Enemy* enemy, const float deltaTime) {
     float speed = enemy->getSpeed();
     size_t index = enemy->getStep();
     float progress = enemy->getStepProgress();
-
+   
     DrawEnemy(enemy);
+
+    int actionIndex = enemy->getWalkFrame();
+    actionIndex = (actionIndex >= 4) ? 0 : actionIndex + 1;
+    enemy->setWalkFrame(actionIndex);
 
     if (path.size() > 1 && index < path.size() - 1) {
         Vector2 current = path[index];
