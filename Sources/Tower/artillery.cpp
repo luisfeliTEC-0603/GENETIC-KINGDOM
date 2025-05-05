@@ -5,17 +5,20 @@ ArtilleryTower :: ArtilleryTower(int xpos, int ypos, int damage, int speed, int 
 void ArtilleryTower :: Upgrade1() {
     int actDamage =  this->getDamage(); 
     actDamage += 10;
+    increaseSpecialAttack(10); 
     this->setDamage(actDamage);
 }
 
 void ArtilleryTower :: Upgrade2() {
     int actDamage =  this->getDamage(); 
     actDamage += 10;
+    increaseSpecialAttack(10); 
     this->setDamage(actDamage);
 }
 
 void ArtilleryTower :: Upgrade3() {
     int actDamage =  this->getDamage(); 
     actDamage += 10;
+    increaseSpecialAttack(5); 
     this->setDamage(actDamage);
 }

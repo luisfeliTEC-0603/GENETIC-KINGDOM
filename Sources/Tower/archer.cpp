@@ -5,17 +5,20 @@ ArcherTower :: ArcherTower(int xpos, int ypos, int damage, int speed, int scope,
 void ArcherTower :: Upgrade1() {
     int actDamage =  this->getDamage(); 
     actDamage += 10;
+    increaseSpecialAttack(10); 
     this->setDamage(actDamage);
 }
 
 void ArcherTower :: Upgrade2() {
     int actDamage =  this->getDamage(); 
     actDamage += 10;
+    increaseSpecialAttack(10); 
     this->setDamage(actDamage);
 }
 
 void ArcherTower :: Upgrade3() {
     int actDamage =  this->getDamage(); 
     actDamage += 10;
+    increaseSpecialAttack(5); 
     this->setDamage(actDamage);
 }

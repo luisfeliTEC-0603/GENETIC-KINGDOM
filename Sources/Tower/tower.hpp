@@ -100,6 +100,7 @@ public:
 
     // Extra functions
     void increaseLevel () {actualLevel++;}
+    void increaseSpecialAttack (int addedPos) {probSpecialAttack += addedPos;}
 
 };
 
