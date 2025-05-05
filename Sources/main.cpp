@@ -24,6 +24,7 @@ int main() {
     vector<Enemy*> enemiesList = {};
     vector<Bullet> bullets;
     Coins coins;
+    Information info;
 
     Map gameMap = LoadMapFromSaves("Saves/map.txt");
     if (gameMap.grid.empty()) {

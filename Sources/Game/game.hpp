@@ -12,6 +12,7 @@
 #include "../Level/gameLevel.hpp"
 #include "../UIElements/TowerSelectionScreen/towerSelection.hpp"
 #include "../UIElements/TowerUpgradeScreen/TowerUpgradeScreen.hpp"
+#include "../UIElements/InformationScreen/InformationScreen.hpp"
 #include "../Textures/gameTextures.hpp"
 #include "../Currency/currency.hpp"
 #include "Pathfinding/aStar.hpp"
