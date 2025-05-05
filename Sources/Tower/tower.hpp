@@ -32,16 +32,19 @@ ataque alto
 
 using namespace std;
 
+
 struct Bullet {
     Vector2 position;
     Vector2 direction;
     float speed;
+    int type; // 0 normal, 1 special bullet
     int damage;
     Enemy* selectedEnemy;
 
-    Bullet(Vector2 pos, Vector2 dir, float spd, int dmg, Enemy* selected)
-        : position(pos), direction(dir), speed(spd), damage(dmg), selectedEnemy(selected){}
+    Bullet(Vector2 pos, Vector2 dir, float spd, int type, int dmg, Enemy* selected)
+        : position(pos), direction(dir), speed(spd), type(type), damage(dmg), selectedEnemy(selected){}
 };
+
 
 
 class Tower {
@@ -58,6 +61,7 @@ private:
     int type; //type = 1 arqueros, type = 2 magos, type = 3 artilleros
     int towerVision;
     int actualLevel = 0;
+    int probSpecialAttack = 25; // At beggining theres is a chance of 25% to get special attack
 
 public:
     Tower (int xpos, int ypos, int damage, int speed, int scope, int regTime, int reloadTime, int type, int vision);
@@ -66,6 +70,7 @@ public:
     virtual void Upgrade3 ();
     virtual void CheckIfEnemiesInRange(vector<Enemy*>& enemies, vector<Bullet>& bulletList, float deltaTime);
     virtual void ShootEnemy(Enemy& enemy, vector<Bullet>& bulletList);
+    virtual bool chance();
 
     virtual ~Tower() = default;
 
