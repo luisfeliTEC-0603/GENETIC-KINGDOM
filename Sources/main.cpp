@@ -35,14 +35,14 @@ int main() {
     cameraController.Initialize(screenWidth, screenHeight, gameMap);
 
     // === Enemy Example ===
-    //Enemy* orc = newEnemy(gameMap, { 10, 10 }, EnemyType::Orc); // inicial pos og { 77, 35 }
-    //enemiesList.push_back(orc);
-    //Enemy* mage = newEnemy(gameMap, { 21, 20 }, EnemyType::DarkMage);
-    //enemiesList.push_back(mage);
-    //Enemy* john_darkSouls = newEnemy(gameMap, { 42, 6 }, EnemyType::Undead);
-    //enemiesList.push_back(john_darkSouls);
-    //Enemy* ezio  = newEnemy(gameMap, { 59, 48 }, EnemyType::Assassin);
-    //enemiesList.push_back(ezio);
+    Enemy* orc = newEnemy(gameMap, { 10, 10 }, EnemyType::Orc); // inicial pos og { 77, 35 }
+    enemiesList.push_back(orc);
+    Enemy* mage = newEnemy(gameMap, { 21, 20 }, EnemyType::DarkMage);
+    enemiesList.push_back(mage);
+    Enemy* john_darkSouls = newEnemy(gameMap, { 42, 6 }, EnemyType::Undead);
+    enemiesList.push_back(john_darkSouls);
+    Enemy* ezio  = newEnemy(gameMap, { 59, 48 }, EnemyType::Assassin);
+    enemiesList.push_back(ezio);
 
     // === Cell Info ===
     int cellValue = 0;
