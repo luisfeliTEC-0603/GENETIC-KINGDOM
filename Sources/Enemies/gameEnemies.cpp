@@ -2,19 +2,26 @@
 
 Enemy::Enemy(Vector2 position_, 
              Vector2 size_, 
-             EnemyType type_,
-             float speed_
+             EnemyType type_
              )
-    : gridPosition(position_), size(size_), type(type_), speed(speed_) {
+    : gridPosition(position_), size(size_), type(type_) {
 
         switch(type_) {
             case EnemyType::Orc:
+                health = 3;
+                speed = 20.0f;
                 break;
             case EnemyType::DarkMage:
+                health = 3;
+                speed = 30.0f;
                 break;
             case EnemyType::Undead:
+                health = 3;
+                speed = 30.0f;
                 break;
             case EnemyType::Assassin:
+                health = 3;
+                speed = 40.0f;
                 break;
         }
     }

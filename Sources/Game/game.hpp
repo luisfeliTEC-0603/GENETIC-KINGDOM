@@ -54,6 +54,16 @@ void DrawEnemy(Enemy* enemy);
 void UpdateEnemy(Enemy* enemy, const float deltaTime);
 
 /**
+ * @def EnemyTakeHit
+ * @param enemy pointer to the enemy hit by a bullet
+ * @return boolean value to determine wether the enemy is still alive
+ * 
+ * @brief updates the enemy health
+ */
+
+bool EnemyTakeHit(Enemy* Enemy);
+
+/**
  * @def CheckDefeatCondition
  * @param enemy reference to the enemy to check
  * @param map reference to the current game map

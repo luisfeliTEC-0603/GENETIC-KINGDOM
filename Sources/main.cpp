@@ -35,12 +35,14 @@ int main() {
     cameraController.Initialize(screenWidth, screenHeight, gameMap);
 
     // === Enemy Example ===
-    Enemy* orc = newEnemy(gameMap, { 10, 10 }, EnemyType::Orc); // inicial pos og { 77, 35 }
+    Enemy* orc = newEnemy(gameMap, { 77, 35 }, EnemyType::Orc);
     enemiesList.push_back(orc);
     Enemy* mage = newEnemy(gameMap, { 21, 20 }, EnemyType::DarkMage);
     enemiesList.push_back(mage);
     Enemy* john_darkSouls = newEnemy(gameMap, { 42, 6 }, EnemyType::Undead);
     enemiesList.push_back(john_darkSouls);
+    Enemy* sun_bro = newEnemy(gameMap, { 43, 6 }, EnemyType::Orc);
+    enemiesList.push_back(sun_bro);
     Enemy* ezio  = newEnemy(gameMap, { 59, 48 }, EnemyType::Assassin);
     enemiesList.push_back(ezio);
 
@@ -113,7 +115,8 @@ int main() {
                         bool upg = UpgradeTower(towersList[i]->getLevel());
                         if (towersList[i]->getLevel() == 0  && upg) {
 
-                            if (coins.getCoinsAmount() >= 50) { // Check if there are enough coins available.
+                            // Check if there are enough coins available.
+                            if (coins.getCoinsAmount() >= 50) { 
                                 coins.decreaseCoins(50);
                                 towersList[i]->Upgrade1();
                                 towersList[i]->increaseLevel();
@@ -121,7 +124,7 @@ int main() {
                             }
 
                             else{
-                                sprintf(messageText, "No tienes suficientes monedas!");
+                                sprintf(messageText, "NO ENOUGH COIN...");
                                 showMessage = true;
                                 messageStartTime = GetTime();
                                 break;
@@ -138,7 +141,7 @@ int main() {
                             }
 
                             else{
-                                sprintf(messageText, "No tienes suficientes monedas!");
+                                sprintf(messageText, "NO ENOUGH COIN...");
                                 showMessage = true;
                                 messageStartTime = GetTime();
                                 break;
@@ -154,7 +157,7 @@ int main() {
                                 break;
                             }
                             else{
-                                sprintf(messageText, "No tienes suficientes monedas!");
+                                sprintf(messageText, "NO ENOUGH COIN...");
                                 showMessage = true;
                                 messageStartTime = GetTime();
                                 break;
@@ -163,7 +166,7 @@ int main() {
                         }  
 
                         if (towersList[i]->getLevel() >= 3) {
-                            sprintf(messageText, "Torre al máximo nivel!");
+                            sprintf(messageText, "MAX LEVEL TOWER");
                             showMessage = true;
                             messageStartTime = GetTime();
                         }  
@@ -190,6 +193,17 @@ int main() {
             // If it hits the enemy (set 5.0f as collision margin)
             if (distance <= 5.0f) {
                 bullets.erase(bullets.begin() + i);
+                bool enemyAlive = EnemyTakeHit(b.selectedEnemy);
+
+                if (!enemyAlive) {
+                        auto it = std::find(enemiesList.begin(), enemiesList.end(), b.selectedEnemy);
+                        if (it != enemiesList.end()) {
+                            enemiesList.erase(it);
+                        }
+
+                        delete b.selectedEnemy;
+                    }
+
                 continue;
             }
         
@@ -221,7 +235,7 @@ int main() {
                 if (showTowerMenu) {
                     int result = ShowScreen();
                     if (coins.getCoinsAmount() < 10) {
-                        sprintf(messageText, "No tienes suficientes monedas!");
+                        sprintf(messageText, "NO ENOUGH COIN... <( •̀ᴖ•́)>");
                         showMessage = true;
                         messageStartTime = GetTime();
                     }

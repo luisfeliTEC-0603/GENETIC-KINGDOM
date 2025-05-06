@@ -5,8 +5,7 @@ Enemy* newEnemy(const Map& map, const Vector2& start, EnemyType type) {
     Enemy* enemy = new Enemy(
         start,
         { (float)ENEMY_SIZE, (float)ENEMY_SIZE },
-        type,
-        50.0f
+        type
     );
     
     std::vector<Vector2> path = AStarPathfinder::findPath(map.grid, start, map.goal);
@@ -60,7 +59,7 @@ void DrawPathway(const Enemy& enemy, Color pathColor) {
     }
 }
 
-void DrawEnemy(Enemy* enemy) {
+void DrawEnemy(Enemy* enemy, Color color) {
 
     Vector2 pos = enemy->getWorldPosition();
     Vector2 size = enemy->getSize();
@@ -81,7 +80,7 @@ void DrawEnemy(Enemy* enemy) {
     DrawTexturePro(
         texture,
         {size.x * enemy->getWalkFrame(), size.y *static_cast<int>(enemy->getDirection()), size.x, size.y }, 
-        rect, {0.0f, 0.0f}, 0.0f, WHITE);
+        rect, {0.0f, 0.0f}, 0.0f, color);
 }
 
 void UpdateEnemy(Enemy* enemy, const float deltaTime) {
@@ -92,10 +91,10 @@ void UpdateEnemy(Enemy* enemy, const float deltaTime) {
     size_t index = enemy->getStep();
     float progress = enemy->getStepProgress();
    
-    DrawEnemy(enemy);
+    DrawEnemy(enemy, WHITE);
 
     static int animCounter = 0;
-    static const int slowFactor = 5;
+    static const int slowFactor = 3;
     if (++animCounter >= slowFactor) {
         enemy->setWalkFrame((enemy->getWalkFrame() + 1) % 5);
         animCounter = 0;
@@ -144,6 +143,20 @@ void UpdateEnemy(Enemy* enemy, const float deltaTime) {
         enemy->setWorldPosition(path.back());
         path.clear();
     }
+}
+
+bool EnemyTakeHit(Enemy* enemy) {
+
+    // Invalid Enemy pointer
+    if (!enemy) { return false; }
+
+    int damage = 3;
+    
+    int newHealth = std::max(0, enemy->getHealth() - damage);
+    DrawEnemy(enemy, RED);
+    enemy->setHealth(newHealth);
+
+    return newHealth > 0; // Still alive ?
 }
 
 bool CheckDefeatCondition(const Enemy& enemy, const Map& map) {
