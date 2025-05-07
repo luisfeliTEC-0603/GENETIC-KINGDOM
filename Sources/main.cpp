@@ -202,6 +202,17 @@ int main() {
                 if (!enemyAlive) {
                     auto it = std::find(enemiesList.begin(), enemiesList.end(), b.selectedEnemy);
                     if (it != enemiesList.end()) {
+                        
+                        switch(b.selectedEnemy->getType()) {
+                            case EnemyType::Orc:
+                                coins.increasCoins(10);
+                            case EnemyType::DarkMage:
+                                coins.increasCoins(15);
+                            case EnemyType::Undead:
+                                coins.increasCoins(15);
+                            case EnemyType::Assassin:
+                                coins.increasCoins(20);
+                        }
                         enemiesList.erase(it);
                     }
                 
