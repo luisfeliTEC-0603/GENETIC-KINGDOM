@@ -165,3 +165,17 @@ bool CheckDefeatCondition(const Enemy& enemy, const Map& map) {
     
     return CheckCollisionRecs(enemyRect, goalRect);
 }
+
+void EnemyWave(const Map& map, int waveNum, std::vector<Enemy*>& enemiesList) {
+    int enemiesNum = std::max(1, waveNum * 5); 
+
+    int maxIndex = static_cast<int>(map.start.size()) - 1;
+    
+    for (int i = 0; i < enemiesNum; i++) {
+        int positionIndex = RandomUtils::randomInt(0, maxIndex); 
+        EnemyType randomType = static_cast<EnemyType>(RandomUtils::randomInt(0, 4));
+        
+        Enemy* enemy = newEnemy(map, map.start[positionIndex], randomType);
+        enemiesList.push_back(enemy);
+    }
+}
