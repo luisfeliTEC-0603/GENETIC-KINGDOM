@@ -73,4 +73,12 @@ bool EnemyTakeHit(Enemy* Enemy);
  */
 bool CheckDefeatCondition(const Enemy& enemy, const Map& map);
 
+/**
+ * @def EnemyWave
+ * @param map reference to the current game map
+ * @param waveNum number of wave
+ * @param enemiesList list to fill with enemies
+ */
+void EnemyWave(const Map& map, int waveNum, std::vector<Enemy*>& enemiesList);
+
 #endif

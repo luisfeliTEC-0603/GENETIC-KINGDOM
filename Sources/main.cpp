@@ -35,16 +35,20 @@ int main() {
     cameraController.Initialize(screenWidth, screenHeight, gameMap);
 
     // === Enemy Example ===
-    Enemy* orc = newEnemy(gameMap, { 77, 35 }, EnemyType::Orc);
-    enemiesList.push_back(orc);
-    Enemy* mage = newEnemy(gameMap, { 21, 20 }, EnemyType::DarkMage);
-    enemiesList.push_back(mage);
-    Enemy* john_darkSouls = newEnemy(gameMap, { 42, 6 }, EnemyType::Undead);
-    enemiesList.push_back(john_darkSouls);
-    Enemy* sun_bro = newEnemy(gameMap, { 43, 6 }, EnemyType::Orc);
-    enemiesList.push_back(sun_bro);
-    Enemy* ezio  = newEnemy(gameMap, { 59, 48 }, EnemyType::Assassin);
-    enemiesList.push_back(ezio);
+    // Enemy* orc = newEnemy(gameMap, { 77, 35 }, EnemyType::Orc);
+    // enemiesList.push_back(orc);
+    // Enemy* mage = newEnemy(gameMap, { 21, 20 }, EnemyType::DarkMage);
+    // enemiesList.push_back(mage);
+    // Enemy* john_darkSouls = newEnemy(gameMap, { 42, 6 }, EnemyType::Undead);
+    // enemiesList.push_back(john_darkSouls);
+    // Enemy* sun_bro = newEnemy(gameMap, { 43, 6 }, EnemyType::Orc);
+    // enemiesList.push_back(sun_bro);
+    // Enemy* ezio  = newEnemy(gameMap, { 59, 48 }, EnemyType::Assassin);
+    // enemiesList.push_back(ezio);
+
+    // === Wave Control ===
+    int waveNum = 1; 
+    EnemyWave(gameMap, waveNum, enemiesList);
 
     // === Cell Info ===
     int cellValue = 0;
@@ -196,15 +200,21 @@ int main() {
                 bool enemyAlive = EnemyTakeHit(b.selectedEnemy);
 
                 if (!enemyAlive) {
-                        auto it = std::find(enemiesList.begin(), enemiesList.end(), b.selectedEnemy);
-                        if (it != enemiesList.end()) {
-                            enemiesList.erase(it);
-                        }
-
-                        delete b.selectedEnemy;
+                    auto it = std::find(enemiesList.begin(), enemiesList.end(), b.selectedEnemy);
+                    if (it != enemiesList.end()) {
+                        enemiesList.erase(it);
                     }
-
-                continue;
+                
+                    // We warn the bullets that this enemy no longer exists.
+                    for (Bullet& otherBullet : bullets) {
+                        if (otherBullet.selectedEnemy == b.selectedEnemy) {
+                            otherBullet.selectedEnemy = nullptr;
+                        }
+                    }
+                
+                    delete b.selectedEnemy;
+                }
+                
             }
         
             // If bullet is on border delete it
@@ -212,6 +222,12 @@ int main() {
                 b.position.y < 0 || b.position.y > screenHeight) {
                 bullets.erase(bullets.begin() + i);
             }
+        }
+
+        // Check if waves is endded
+        if (enemiesList.size() == 0) {
+            waveNum++;
+            EnemyWave(gameMap, waveNum, enemiesList);
         }
        
         BeginDrawing();
