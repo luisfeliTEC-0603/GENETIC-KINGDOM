@@ -200,15 +200,21 @@ int main() {
                 bool enemyAlive = EnemyTakeHit(b.selectedEnemy);
 
                 if (!enemyAlive) {
-                        auto it = std::find(enemiesList.begin(), enemiesList.end(), b.selectedEnemy);
-                        if (it != enemiesList.end()) {
-                            enemiesList.erase(it);
-                        }
-
-                        delete b.selectedEnemy;
+                    auto it = std::find(enemiesList.begin(), enemiesList.end(), b.selectedEnemy);
+                    if (it != enemiesList.end()) {
+                        enemiesList.erase(it);
                     }
-
-                continue;
+                
+                    // We warn the bullets that this enemy no longer exists.
+                    for (Bullet& otherBullet : bullets) {
+                        if (otherBullet.selectedEnemy == b.selectedEnemy) {
+                            otherBullet.selectedEnemy = nullptr;
+                        }
+                    }
+                
+                    delete b.selectedEnemy;
+                }
+                
             }
         
             // If bullet is on border delete it
@@ -216,6 +222,12 @@ int main() {
                 b.position.y < 0 || b.position.y > screenHeight) {
                 bullets.erase(bullets.begin() + i);
             }
+        }
+
+        // Check if waves is endded
+        if (enemiesList.size() == 0) {
+            waveNum++;
+            EnemyWave(gameMap, waveNum, enemiesList);
         }
        
         BeginDrawing();
