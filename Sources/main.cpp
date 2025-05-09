@@ -25,6 +25,7 @@ int main() {
     vector<Bullet> bullets;
     Coins coins;
     Information info;
+    GeneticManager geneticManager;
 
     Map gameMap = LoadMapFromSaves("Saves/map.txt");
     if (gameMap.grid.empty()) {
@@ -48,7 +49,7 @@ int main() {
 
     // === Wave Control ===
     int waveNum = 1; 
-    EnemyWave(gameMap, waveNum, enemiesList);
+    EnemyWave(gameMap, waveNum, enemiesList, geneticManager);
 
     // === Cell Info ===
     int cellValue = 0;
@@ -222,7 +223,7 @@ int main() {
                             otherBullet.selectedEnemy = nullptr;
                         }
                     }
-                
+                    coins.increasCoins(15);
                     delete b.selectedEnemy;
                 }
                 
@@ -238,7 +239,9 @@ int main() {
         // Check if waves is endded
         if (enemiesList.size() == 0) {
             waveNum++;
-            EnemyWave(gameMap, waveNum, enemiesList);
+            geneticManager.changeGenetic();
+            geneticManager.printNewStats();
+            EnemyWave(gameMap, waveNum, enemiesList, geneticManager);
         }
        
         BeginDrawing();
@@ -276,7 +279,7 @@ int main() {
                                 // Archer Tower  
                             } else if (result == 2) {
                                 coins.decreaseCoins(10);
-                                towersList.push_back(new ArtilleryTower((int)mouseCell.x, (int)mouseCell.y, 7, 1, 3, 5, 2, 2, 1));
+                                towersList.push_back(new WizardTower((int)mouseCell.x, (int)mouseCell.y, 7, 1, 3, 5, 2, 2, 1));
                                 gameMap.grid[(int)mouseCell.y][(int)mouseCell.x] = 5;
                                 // Whizar Tower
                             } else if (result == 3) {

@@ -16,6 +16,7 @@
 #include "../Textures/gameTextures.hpp"
 #include "../Currency/currency.hpp"
 #include "Pathfinding/aStar.hpp"
+#include "GeneticAlg/GeneticAlg.hpp"
 
 /**
  * @def newEnemy
@@ -79,6 +80,6 @@ bool CheckDefeatCondition(const Enemy& enemy, const Map& map);
  * @param waveNum number of wave
  * @param enemiesList list to fill with enemies
  */
-void EnemyWave(const Map& map, int waveNum, std::vector<Enemy*>& enemiesList);
+void EnemyWave(const Map& map, int waveNum, std::vector<Enemy*>& enemiesList, GeneticManager& manager);
 
 #endif
