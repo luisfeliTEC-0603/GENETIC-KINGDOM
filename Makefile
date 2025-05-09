@@ -17,6 +17,7 @@ CURRENCY_SRCS := Sources/Currency/currency.cpp
 UTILS_SRCS := Sources/Utilities/tools.cpp
 ENEMY_SRCS := Sources/Enemies/gameEnemies.cpp
 INFO_DISPL := Sources/UIElements/InformationScreen/InformationScreen.cpp
+GENETIC_ALG := Sources/Game/GeneticAlg/GeneticAlg.cpp
 
 # Combine sources
 ALL_SRCS := Sources/main.cpp \
@@ -29,9 +30,10 @@ ALL_SRCS := Sources/main.cpp \
             $(CURRENCY_SRCS) \
             $(UTILS_SRCS) \
             $(ENEMY_SRCS) \
-            $(INFO_DISPL)
+            $(INFO_DISPL)\
+            $(GENETIC_ALG)
 
-# Build Rules
+# Build Rules 
 all: $(TARGET)
 
 $(TARGET): $(ALL_SRCS)

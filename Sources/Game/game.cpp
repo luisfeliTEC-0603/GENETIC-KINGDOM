@@ -166,18 +166,36 @@ bool CheckDefeatCondition(const Enemy& enemy, const Map& map) {
     return CheckCollisionRecs(enemyRect, goalRect);
 }
 
-void EnemyWave(const Map& map, int waveNum, std::vector<Enemy*>& enemiesList) {
-    int enemiesNum = std::max(1, waveNum * 5); 
+void EnemyWave(const Map& map, int waveNum, std::vector<Enemy*>& enemiesList, GeneticManager& geneticMan) {
+    int enemiesNum = std::max(1, 5 + waveNum); 
 
     int maxIndex = static_cast<int>(map.start.size());
     
     for (int i = 0; i < enemiesNum; i++) {
         int positionIndex = RandomUtils::randomInt(0, maxIndex-1); 
-        int num = RandomUtils::randomInt(0, 3);
-        EnemyType randomType = static_cast<EnemyType>(num);
+        int type = RandomUtils::randomInt(0, 3);
+        EnemyType randomType = static_cast<EnemyType>(type);
         
         Enemy* enemy = newEnemy(map, map.start[positionIndex], randomType);
-        std::cout << "Tipo: " << num << " | Position: " << positionIndex << std::endl;
+
+        // New stats for enemy
+        int newHealth = geneticMan.getHealthFrom(type);
+        int newSpeed = geneticMan.getSpeedFrom(type);
+
+        if (RandomUtils::checkProbability(geneticMan.getProbMut() / 100.0f)){ // health mutation
+            geneticMan.IncreaseMutation();
+            newSpeed = newSpeed + RandomUtils::randomInt(1, 3);
+        }
+
+        if (RandomUtils::checkProbability(geneticMan.getProbMut() / 100.0f)){ // health mutation
+            geneticMan.IncreaseMutation();
+            newHealth = newHealth + RandomUtils::randomInt(4, 7);
+        }
+
+        geneticMan.changeNewStat(type, newHealth, newSpeed);
+        enemy->setHealth(newHealth);
+        enemy->setSpeed(newSpeed);
+        std::cout << "Tipo: " << type << " | Position: " << positionIndex << " | Healt: " << newHealth <<" | Speed: "  << newSpeed << std::endl;
 
         enemiesList.push_back(enemy);
     }
