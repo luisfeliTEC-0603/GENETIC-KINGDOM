@@ -167,7 +167,7 @@ bool CheckDefeatCondition(const Enemy& enemy, const Map& map) {
 }
 
 void EnemyWave(const Map& map, int waveNum, std::vector<Enemy*>& enemiesList, GeneticManager& geneticMan) {
-    int enemiesNum = std::max(1, waveNum); //int enemiesNum = std::max(1, 5 + waveNum); 
+    int enemiesNum = std::max(1, 5 + waveNum); 
 
     int maxIndex = static_cast<int>(map.start.size());
     
