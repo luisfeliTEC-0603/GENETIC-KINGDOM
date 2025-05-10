@@ -32,6 +32,8 @@ public:
     int getHealthFrom(int type);
     int getSpeedFrom(int type); 
     int getProbMut();
+    int getMutations();
+    int getFit(int type);
 };
 
 

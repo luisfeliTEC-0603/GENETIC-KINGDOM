@@ -69,6 +69,10 @@ int GeneticManager::getProbMut() {
     return probMut;
 }
 
+int GeneticManager::getMutations() {
+    return mutation;
+}
+
 void GeneticManager::printNewStats() const {
     std::cout << "=== New Enemy Stats ===" << std::endl;
     for (int i = 0; i < 4; ++i) {
@@ -80,3 +84,6 @@ void GeneticManager::printNewStats() const {
     std::cout << "=======================" << std::endl;
 }
 
+int GeneticManager::getFit(int type) {
+    return newStats[type][1] + newStats[type][2];
+}

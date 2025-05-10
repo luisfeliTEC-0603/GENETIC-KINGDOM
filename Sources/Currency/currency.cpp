@@ -1,7 +1,7 @@
 #include "currency.hpp"
 
 Coins:: Coins() {
-    coins = 50; // Inicial coins value
+    coins = 500; // Inicial coins value
 }
 
 void Coins::increasCoins(int numberToIncrease) {
