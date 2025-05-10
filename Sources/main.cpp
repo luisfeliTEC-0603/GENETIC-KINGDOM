@@ -122,7 +122,7 @@ int main() {
                             }
 
                             else{
-                                sprintf(messageText, "NO ENOUGH COIN...");
+                                sprintf(messageText, "NO ENOUGH COINS...");
                                 showMessage = true;
                                 messageStartTime = GetTime();
                                 break;
@@ -139,7 +139,7 @@ int main() {
                             }
 
                             else{
-                                sprintf(messageText, "NO ENOUGH COIN...");
+                                sprintf(messageText, "NO ENOUGH COINS...");
                                 showMessage = true;
                                 messageStartTime = GetTime();
                                 break;
@@ -155,7 +155,7 @@ int main() {
                                 break;
                             }
                             else{
-                                sprintf(messageText, "NO ENOUGH COIN...");
+                                sprintf(messageText, "NO ENOUGH COINS...");
                                 showMessage = true;
                                 messageStartTime = GetTime();
                                 break;
@@ -223,8 +223,8 @@ int main() {
             }
         
             // If bullet is on border delete it
-            if (b.position.x < 0 || b.position.x > screenWidth ||
-                b.position.y < 0 || b.position.y > screenHeight) {
+            if (b.position.x < 0 || b.position.x > screenWidth + 21* CELL_SIZE||
+                b.position.y < 0 || b.position.y > screenHeight + 21* CELL_SIZE ) {
                 bullets.erase(bullets.begin() + i);
             }
         }
