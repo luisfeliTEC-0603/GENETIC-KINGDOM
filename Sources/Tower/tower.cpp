@@ -72,7 +72,14 @@ void Tower::CheckIfEnemiesInRange(vector<Enemy*>& enemies, vector<Bullet>& bulle
     for (Enemy* e : enemies) {
         if (e->getWorldPosition().x >= (xpos - scope) * CELL_SIZE && e->getWorldPosition().x <= (xpos + scope) * CELL_SIZE &&
             e->getWorldPosition().y >= (ypos - scope) * CELL_SIZE && e->getWorldPosition().y <= (ypos + scope) * CELL_SIZE) {
-            enemisInRange.push_back(e);
+            if (this->type == 1 ) { //if its an Archer tower dont shoot
+                if (e->getType() !=  EnemyType::Undead) { // if enemy type is undead, dont push anything to enemiesInRange.
+                    enemisInRange.push_back(e); 
+                }              
+            }
+            else {
+                enemisInRange.push_back(e);
+            }
         }
     }
 
