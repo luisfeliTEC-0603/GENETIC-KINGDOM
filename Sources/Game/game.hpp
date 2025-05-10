@@ -57,12 +57,14 @@ void UpdateEnemy(Enemy* enemy, const float deltaTime);
 /**
  * @def EnemyTakeHit
  * @param enemy pointer to the enemy hit by a bullet
+ * @param bulletType int that represents the type of bullet
+ * @param damage initial bullet damage
  * @return boolean value to determine wether the enemy is still alive
  * 
  * @brief updates the enemy health
  */
 
-bool EnemyTakeHit(Enemy* Enemy);
+bool EnemyTakeHit(Enemy* Enemy, int bulletType, int damage);
 
 /**
  * @def CheckDefeatCondition

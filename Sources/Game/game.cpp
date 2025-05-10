@@ -93,12 +93,14 @@ void UpdateEnemy(Enemy* enemy, const float deltaTime) {
    
     DrawEnemy(enemy, WHITE);
 
-    static int animCounter = 0;
-    static const int slowFactor = 3;
-    if (++animCounter >= slowFactor) {
-        enemy->setWalkFrame((enemy->getWalkFrame() + 1) % 5);
-        animCounter = 0;
-    }
+    //static int animCounter = 0;
+    //static const int slowFactor = 3;
+    //if (++animCounter >= slowFactor) {
+    //    enemy->setWalkFrame((enemy->getWalkFrame() + 1) % 5);
+    //    animCounter = 0;
+    //}
+
+    enemy->setWalkFrame(RandomUtils::randomInt(0, 4));
 
     if (path.size() > 1 && index < path.size() - 1) {
         Vector2 current = path[index];
@@ -145,14 +147,20 @@ void UpdateEnemy(Enemy* enemy, const float deltaTime) {
     }
 }
 
-bool EnemyTakeHit(Enemy* enemy) {
+bool EnemyTakeHit(Enemy* enemy, int bulletType, int damage) {
 
     // Invalid Enemy pointer
     if (!enemy) { return false; }
 
-    int damage = 3;
-    
-    int newHealth = std::max(0, enemy->getHealth() - damage);
+    int damageFactor = damage;
+    const std::vector<int>& resistantTypes = enemy->getResistances();
+
+    // Cases for resistances 
+    if(std::find(resistantTypes.begin(), resistantTypes.end(), bulletType) != resistantTypes.end()){
+        damageFactor /= 2; 
+    }
+   
+    int newHealth = std::max(0, enemy->getHealth() - damageFactor);
     DrawEnemy(enemy, RED);
     enemy->setHealth(newHealth);
 

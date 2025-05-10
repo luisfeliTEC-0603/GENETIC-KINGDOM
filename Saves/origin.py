@@ -9,7 +9,7 @@ Generates procedural 2D grid-based maps with:
 - Multiple entry points
 
 Usage example:
-    python3 origin.py --width=100 --height=50 --paths=50 --rivers=8 --output=map.txt
+    python3 origin.py --width=208 --height=96 --paths=60 --rivers=15 --output=map.txt
 """
 
 import random
@@ -123,6 +123,34 @@ def save_map(grid: List[List[str]], filename: str) -> None:
         for row in grid:
             f.write("".join(row) + "\n")
 
+def create_spawn_points(grid: List[List[str]]) -> List[List[str]]:
+    """Replace some perimeter walls with spawn points ('S').
+    
+    Args:
+        grid: The map grid to modify
+    
+    Returns:
+        The modified grid with spawn points added
+    """
+    height = len(grid)
+    width = len(grid[0]) if height > 0 else 0
+    
+    # Top and bottom edges
+    for x in range(width):
+        if grid[0][x] == PATH:
+            grid[0][x] = 'S'
+        if grid[height-1][x] == PATH:
+            grid[height-1][x] = 'S'
+    
+    # Left and right edges (skip corners already done above)
+    for y in range(1, height-1):
+        if grid[y][0] == PATH:
+            grid[y][0] = 'S'
+        if grid[y][width-1] == PATH:
+            grid[y][width-1] = 'S'
+    
+    return grid
+
 def generate_map(width: int = 100, height: int = 50, 
                 num_paths: int = 35, num_rivers: int = 5) -> List[List[str]]:
     """Generate a complete map with paths, rivers and goal.
@@ -154,9 +182,12 @@ def generate_map(width: int = 100, height: int = 50,
         start = (random.randint(0, width-1), random.randint(0, height-1))
         carve_path(grid, start, center, RIVER, [WALL, PATH])
     
-    # Add goal (10% of map size)
-    goal_size = (max(3, width//10), max(3, height//10))
+    # Add goal
+    goal_size = (2, 2)
     add_goal(grid, goal_size)
+    
+    # Add spawn points 
+    create_spawn_points(grid)
     
     return grid
 

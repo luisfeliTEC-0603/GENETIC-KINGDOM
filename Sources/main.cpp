@@ -191,7 +191,7 @@ int main() {
             // If it hits the enemy (set 5.0f as collision margin)
             if (distance <= 5.0f) {
                 bullets.erase(bullets.begin() + i);
-                bool enemyAlive = EnemyTakeHit(b.selectedEnemy);
+                bool enemyAlive = EnemyTakeHit(b.selectedEnemy, b.towerType, b.damage);
 
                 if (!enemyAlive) {
                     auto it = std::find(enemiesList.begin(), enemiesList.end(), b.selectedEnemy);

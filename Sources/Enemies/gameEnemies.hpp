@@ -16,12 +16,12 @@
  * 
  * @var EnemyType::Orc
  * @brief resistance [archers], weakness [magic, artillery], speed [slow]  
- * @var EnemyType::DarkMage
- * @brief resistance [magic], weakness [archers, artillery], speed [fast] 
+ * @var EnemyType::DarkMage <-> Mercenaries
+ * @brief resistance [archers, artillery], weakness [magic], speed [medium] 
  * @var EnemyType::Undead
- * @brief attackBy [magic, archers], speed [medium-slow] 
- * @var EnemyType::Assassin
- * @brief resistance [archers, artillery], weakness [magic], speed [medium-fast] 
+ * @brief attackBy [magic, archers], speed [medium] 
+ * @var EnemyType::Assassin <-> Dark elf
+ * @brief resistance [magic], weakness [archers, artillery], speed [fast] 
  */
 
 enum class EnemyType {
@@ -62,6 +62,7 @@ enum class EnemyDirection {
  * @param step : current index in pathway
  * @param setProgress : progress (0.0 to 1.0) between current and next step
  * @param walkingStep : index of event in the texture
+ * @param resistances : list of int that represent the resistances of each type
  */
 
 class Enemy {
@@ -79,6 +80,7 @@ private:
     EnemyType type;
     int health;
     float speed;
+    std::vector<int> resistances = {};
     
     // movement mechanics
     std::vector<Vector2> pathway;
@@ -104,6 +106,7 @@ public:
     size_t getStep() const;
     float getStepProgress() const;
     int getWalkFrame() const;
+    std::vector<int> getResistances() const;
 
     // === Setters ===
     void setHealth(int newHealth);
