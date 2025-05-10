@@ -68,7 +68,7 @@ public:
     virtual void Upgrade1 ();
     virtual void Upgrade2 ();
     virtual void Upgrade3 ();
-    virtual void CheckIfEnemiesInRange(vector<Enemy*>& enemies, vector<Bullet>& bulletList, float deltaTime);
+    virtual void CheckIfEnemiesInRange(vector<Enemy*>& enemies, vector<Bullet>& bulletList, float deltaTime, int goalx, int goaly);
     virtual void ShootEnemy(Enemy& enemy, vector<Bullet>& bulletList);
     virtual bool chance();
 

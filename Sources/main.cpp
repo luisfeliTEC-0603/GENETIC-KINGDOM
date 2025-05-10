@@ -44,9 +44,11 @@ int main() {
 
     // === Message Variables ===
     bool showMessage = false;
+    bool newWave = true;
     float messageStartTime = 0;
     const float messageDuration = 2.0f;
     char messageText[64];
+    sprintf(messageText, "Wave %d incoming!", waveNum); // Nedded here because at beggining must show wave 1 screen.
 
     // === GAME LOOP ===
     bool dead = false;
@@ -120,7 +122,7 @@ int main() {
                             }
 
                             else{
-                                sprintf(messageText, "NO ENOUGH COIN...");
+                                sprintf(messageText, "NO ENOUGH COINS...");
                                 showMessage = true;
                                 messageStartTime = GetTime();
                                 break;
@@ -137,7 +139,7 @@ int main() {
                             }
 
                             else{
-                                sprintf(messageText, "NO ENOUGH COIN...");
+                                sprintf(messageText, "NO ENOUGH COINS...");
                                 showMessage = true;
                                 messageStartTime = GetTime();
                                 break;
@@ -153,7 +155,7 @@ int main() {
                                 break;
                             }
                             else{
-                                sprintf(messageText, "NO ENOUGH COIN...");
+                                sprintf(messageText, "NO ENOUGH COINS...");
                                 showMessage = true;
                                 messageStartTime = GetTime();
                                 break;
@@ -221,8 +223,8 @@ int main() {
             }
         
             // If bullet is on border delete it
-            if (b.position.x < 0 || b.position.x > screenWidth ||
-                b.position.y < 0 || b.position.y > screenHeight) {
+            if (b.position.x < 0 || b.position.x > screenWidth + 21* CELL_SIZE||
+                b.position.y < 0 || b.position.y > screenHeight + 21* CELL_SIZE ) {
                 bullets.erase(bullets.begin() + i);
             }
         }
@@ -233,6 +235,9 @@ int main() {
             info.waveNum++;
             geneticManager.changeGenetic();
             geneticManager.printNewStats();
+            newWave = true;
+            sprintf(messageText, "Wave %d incoming!", waveNum);
+            messageStartTime = GetTime();
             EnemyWave(gameMap, waveNum, enemiesList, geneticManager);
         }
        
@@ -250,14 +255,14 @@ int main() {
                 // Check if an enemy is near each tower.
                 for (int i = 0; i < (int)towersList.size(); i++) {
                     DrawTower(gameMap, towersList[i]->getXpos(), towersList[i]->getYpos(), towersList[i]->getType(), towersList[i]->getVision());
-                    towersList[i]->CheckIfEnemiesInRange(enemiesList, bullets, deltaTime);
+                    towersList[i]->CheckIfEnemiesInRange(enemiesList, bullets, deltaTime, gameMap.goal.x, gameMap.goal.y);
                 }
                 
                 // This is in case player wants to add a new tower, can be cancelled
                 if (showTowerMenu) {
                     int result = ShowScreen();
                     if (coins.getCoinsAmount() < 10) {
-                        sprintf(messageText, "NO ENOUGH COIN... <( •̀ᴖ•́)>");
+                        sprintf(messageText, "NO ENOUGH COINS...");
                         showMessage = true;
                         messageStartTime = GetTime();
                     }
@@ -308,6 +313,16 @@ int main() {
                 
                     if (GetTime() - messageStartTime >= messageDuration) {
                         showMessage = false;
+                    }
+                }
+
+                // Show new wave 
+                if (newWave) {
+                    DrawRectangle(((int)mouseCell.x - 8) * CELL_SIZE , ((int)mouseCell.y - 8) * CELL_SIZE , 200, 50, RED);
+                    DrawText(messageText, ((int)mouseCell.x - 7) * CELL_SIZE, ((int)mouseCell.y - 7) * CELL_SIZE, 20, WHITE);
+                    
+                    if (GetTime() - messageStartTime >= messageDuration) {
+                        newWave = false;
                     }
                 }
 
