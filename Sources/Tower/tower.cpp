@@ -35,7 +35,9 @@ void Tower::ShootEnemy(Enemy& enemy, vector<Bullet>& bulletList) {
   int finalDamage = damage;
   if (Bulltype == 1) {damage *= 2;} // In case there is a special bullet doubles damage
 
-  bulletList.push_back(Bullet(towerPos, dir, this->speed, Bulltype, finalDamage, &enemy)); // Bullet id is the same as the tower so when it si deleted is easy to detect which tower decrease bullet count
+  Bullet bull = Bullet(towerPos, dir, this->speed, Bulltype, finalDamage, &enemy);
+  bull.towerType = this->type;
+  bulletList.push_back(bull); // Bullet id is the same as the tower so when it si deleted is easy to detect which tower decrease bullet count
   activeBullets++; // adds new bullet
 }
 

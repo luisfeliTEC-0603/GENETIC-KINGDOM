@@ -38,6 +38,7 @@ struct Bullet {
     Vector2 direction;
     float speed;
     int type; // 0 normal, 1 special bullet
+    int towerType; //towerType = 1 arqueros, towerType = 2 magos, towerType = 3 artilleros
     int damage;
     Enemy* selectedEnemy;
 
