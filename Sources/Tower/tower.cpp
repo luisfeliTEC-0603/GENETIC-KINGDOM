@@ -44,7 +44,10 @@ bool Tower::chance() { // This is the logic to shoot the special bullet, if prob
     return roll <= probSpecialAttack;
 }   
 
-void Tower::CheckIfEnemiesInRange(vector<Enemy*>& enemies, vector<Bullet>& bulletList, float deltaTime) {
+void Tower::CheckIfEnemiesInRange(vector<Enemy*>& enemies, vector<Bullet>& bulletList, float deltaTime, int goalx, int goaly) {
+    vector<Enemy*> enemisInRange = {};
+    int shortGoalDistanceIndex = -1;
+    int actualShortDist = std::numeric_limits<int>::max();
     if (activeBullets >= 2 ) {
         timeSinceLastShot += deltaTime;
         if (timeSinceLastShot >= 1.0f) {
@@ -67,32 +70,45 @@ void Tower::CheckIfEnemiesInRange(vector<Enemy*>& enemies, vector<Bullet>& bulle
     for (Enemy* e : enemies) {
         if (e->getWorldPosition().x >= (xpos - scope) * CELL_SIZE && e->getWorldPosition().x <= (xpos + scope) * CELL_SIZE &&
             e->getWorldPosition().y >= (ypos - scope) * CELL_SIZE && e->getWorldPosition().y <= (ypos + scope) * CELL_SIZE) {
-            
-            // Calcular diferencia en X y Y
-            float dx = e->getWorldPosition().x - towerPixelX;
-            float dy = e->getWorldPosition().y - towerPixelY;
-    
-            // Determinar dirección
-            if (std::abs(dx) > std::abs(dy)) {
-                if (dx > 0) {
-                    towerVision = 2; // derecha
-                } else {
-                    towerVision = 4; // izquierda
-                }
-            } else {
-                if (dy > 0) {
-                    towerVision = 3; // abajo
-                } else {
-                    towerVision = 1; // arriba
-                }
-            }
-    
-            ShootEnemy(*e, bulletList);
-            timeSinceLastShot = 0.0f;
-            break; // disparar solo una vez
+            enemisInRange.push_back(e);
         }
     }
+
+    for (int i = 0; i < static_cast<int>(enemisInRange.size()); i++) {
+        int distance = std::abs(enemisInRange[i]->getWorldPosition().x - goalx * CELL_SIZE) +
+                       std::abs(enemisInRange[i]->getWorldPosition().y - goaly * CELL_SIZE);
+        if (distance < actualShortDist) {
+            shortGoalDistanceIndex = i;
+            actualShortDist = distance;
+        }
+    }
+
+    if (shortGoalDistanceIndex == -1) {
+        // No enemy found
+        return;
+    }
+
+    // Calcular diferencia en X y Y
+    float dx = enemisInRange[shortGoalDistanceIndex]->getWorldPosition().x - towerPixelX;
+    float dy = enemisInRange[shortGoalDistanceIndex]->getWorldPosition().y - towerPixelY;
+
+    // Determinar dirección
+    if (std::abs(dx) > std::abs(dy)) {
+        if (dx > 0) {
+            towerVision = 2; // derecha
+        } else {
+            towerVision = 4; // izquierda
+        }
+    } else {
+        if (dy > 0) {
+            towerVision = 3; // abajo
+        } else {
+            towerVision = 1; // arriba
+        }
+    }
+
+    ShootEnemy(*enemisInRange[shortGoalDistanceIndex], bulletList);
+    timeSinceLastShot = 0.0f;
     
-  
 }
 

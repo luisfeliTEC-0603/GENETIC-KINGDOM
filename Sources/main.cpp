@@ -250,7 +250,7 @@ int main() {
                 // Check if an enemy is near each tower.
                 for (int i = 0; i < (int)towersList.size(); i++) {
                     DrawTower(gameMap, towersList[i]->getXpos(), towersList[i]->getYpos(), towersList[i]->getType(), towersList[i]->getVision());
-                    towersList[i]->CheckIfEnemiesInRange(enemiesList, bullets, deltaTime);
+                    towersList[i]->CheckIfEnemiesInRange(enemiesList, bullets, deltaTime, gameMap.goal.x, gameMap.goal.y);
                 }
                 
                 // This is in case player wants to add a new tower, can be cancelled
