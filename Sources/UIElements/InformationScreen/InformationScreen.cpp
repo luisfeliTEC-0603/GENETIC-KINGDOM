@@ -11,9 +11,9 @@ void ShowInformationScreen(Information& info) {
         ClearBackground(BLACK);
 
         // General Game Info
-        DrawText(TextFormat("Numero de Oleada: %d", info.waveNum), 50, 30, 20, RAYWHITE);
-        DrawText(TextFormat("Probabilidad: %d%%", info.prob), 50, 60, 20, RAYWHITE);
-        DrawText(TextFormat("Mutaciones: %d", info.mutaciones), 50, 90, 20, RAYWHITE);
+        DrawText(TextFormat("Wave Number: %d", info.waveNum), 50, 30, 20, RAYWHITE);
+        DrawText(TextFormat("Mutation Probability: %d%%", info.prob), 50, 60, 20, RAYWHITE);
+        DrawText(TextFormat("Mutations: %d", info.mutaciones), 50, 90, 20, RAYWHITE);
 
         // Title
         DrawText("Towers:", 50, 140, 20, RAYWHITE);
@@ -51,8 +51,8 @@ void ShowInformationScreen(Information& info) {
 
         int tableX = 400;  // <- ANTES estaba más lejos, lo movemos a la izquierda
 
-        DrawText("Oleada:", tableX, 30, 20, RAYWHITE);
-        DrawText("Muertes:", tableX, 60, 20, RAYWHITE);
+        DrawText("Wave:", tableX, 30, 20, RAYWHITE);
+        DrawText("Deads:", tableX, 60, 20, RAYWHITE);
         
         if (info.waveNum > 1) {
             int offset = 100; // espacio desde texto hasta primer número
@@ -63,6 +63,29 @@ void ShowInformationScreen(Information& info) {
                 DrawText(TextFormat("%d", i), xPos, 30, 20, RAYWHITE);        // número de oleada
                 DrawText(TextFormat("%d", 5 + i), xPos, 60, 20, RAYWHITE);    // muertes
             }
+        }
+
+        // Fits info - debajo de torres
+        int fitsStartY = startY + 3 * (2 * CELL_SIZE) + 50; // debajo de las torres
+        int fitsStartX = 50;
+
+        // Labels de tipos
+        DrawText("Type", fitsStartX, fitsStartY, 20, RAYWHITE);
+
+        const char* typeNames[4] = { "Orcs", "DarkMage", "Undead", "Assasin" };
+
+        for (int i = 0; i < 4; ++i) {
+            int xPos = fitsStartX + 110 + i * 110;
+            DrawText(typeNames[i], xPos, fitsStartY, 20, RAYWHITE);
+        }
+
+        // Fits label
+        DrawText("Fit", fitsStartX, fitsStartY + 40, 20, RAYWHITE);
+
+        // Valores de fits
+        for (int i = 0; i < 4; ++i) {
+            int xPos = fitsStartX + 110 + i * 110;
+            DrawText(TextFormat("%d", info.fits[i]), xPos, fitsStartY + 40, 20, RAYWHITE);
         }
 
         if (IsKeyPressed(KEY_N)) {

@@ -13,7 +13,7 @@ struct Information {
     int prob = 65;
 
     // Fits of enemies
-    std::vector<int> fits = {0,0,0,0};
+    std::vector<int> fits = {40,35,55,40};
 
     // Towers info
     std::array<std::array<int, 4>, 3> towers;
