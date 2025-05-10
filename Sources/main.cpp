@@ -44,9 +44,11 @@ int main() {
 
     // === Message Variables ===
     bool showMessage = false;
+    bool newWave = true;
     float messageStartTime = 0;
     const float messageDuration = 2.0f;
     char messageText[64];
+    sprintf(messageText, "Wave %d incoming!", waveNum); // Nedded here because at beggining must show wave 1 screen.
 
     // === GAME LOOP ===
     bool dead = false;
@@ -233,6 +235,9 @@ int main() {
             info.waveNum++;
             geneticManager.changeGenetic();
             geneticManager.printNewStats();
+            newWave = true;
+            sprintf(messageText, "Wave %d incoming!", waveNum);
+            messageStartTime = GetTime();
             EnemyWave(gameMap, waveNum, enemiesList, geneticManager);
         }
        
@@ -257,7 +262,7 @@ int main() {
                 if (showTowerMenu) {
                     int result = ShowScreen();
                     if (coins.getCoinsAmount() < 10) {
-                        sprintf(messageText, "NO ENOUGH COIN... <( •̀ᴖ•́)>");
+                        sprintf(messageText, "NO ENOUGH COINS...");
                         showMessage = true;
                         messageStartTime = GetTime();
                     }
@@ -308,6 +313,16 @@ int main() {
                 
                     if (GetTime() - messageStartTime >= messageDuration) {
                         showMessage = false;
+                    }
+                }
+
+                // Show new wave 
+                if (newWave) {
+                    DrawRectangle(((int)mouseCell.x - 8) * CELL_SIZE , ((int)mouseCell.y - 8) * CELL_SIZE , 200, 50, RED);
+                    DrawText(messageText, ((int)mouseCell.x - 7) * CELL_SIZE, ((int)mouseCell.y - 7) * CELL_SIZE, 20, WHITE);
+                    
+                    if (GetTime() - messageStartTime >= messageDuration) {
+                        newWave = false;
                     }
                 }
 
