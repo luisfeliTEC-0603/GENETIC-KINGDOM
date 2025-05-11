@@ -75,6 +75,17 @@ int main() {
             }
         }
 
+        // Check win condition
+        if (5 <= waveNum) {
+            BeginDrawing();
+                ClearBackground(BLACK);
+                DrawText("VICTORY", screenWidth/2 - 100, screenHeight/2 - 20, 40, GREEN);
+            EndDrawing();
+            WaitTime(2);
+
+            dead = true;
+        }
+
         // Logic to display game information
         if (IsKeyPressed(KEY_M)) {
 
@@ -332,16 +343,16 @@ int main() {
             DrawCircleV(GetMousePosition(), 4, DARKGRAY); // Exact Mouse Position
 
             DrawTextEx(GetFontDefault(),TextFormat("Currency[%i]", coins), 
-                Vector2Add(GetMousePosition(), (Vector2){ -44, 72 }), 20, 2, RED); // Data : Actuall Currency
+                Vector2Add(GetMousePosition(), (Vector2){ -44, 24 }), 20, 2, RED); // Data : Actuall Currency
             
-            DrawTextEx(GetFontDefault(), TextFormat("pxls [%i, %i]", GetMouseX(), GetMouseY()), 
-                Vector2Add(GetMousePosition(), (Vector2){ -44, -24 }), 20, 2, RED); // Data : Mouse Coords
-
-            DrawTextEx(GetFontDefault(), TextFormat("zoom [%.2f]", cameraController.GetCameraZoom()), 
-                Vector2Add(GetMousePosition(), (Vector2){ -44, -48 }), 20, 2, RED); // Data : Zoom Level
-            
-            DrawTextEx(GetFontDefault(), TextFormat("cell [%i, %i]", (int)mouseCell.x, (int)mouseCell.y), 
-                Vector2Add(GetMousePosition(), (Vector2){ -44, 24 }), 20, 2, RED); // Data : Mouse in Cell
+            //DrawTextEx(GetFontDefault(), TextFormat("pxls [%i, %i]", GetMouseX(), GetMouseY()), 
+            //    Vector2Add(GetMousePosition(), (Vector2){ -44, -24 }), 20, 2, RED); // Data : Mouse Coords
+            //
+            //DrawTextEx(GetFontDefault(), TextFormat("zoom [%.2f]", cameraController.GetCameraZoom()), 
+            //    Vector2Add(GetMousePosition(), (Vector2){ -44, -48 }), 20, 2, RED); // Data : Zoom Level
+            //
+            //DrawTextEx(GetFontDefault(), TextFormat("cell [%i, %i]", (int)mouseCell.x, (int)mouseCell.y), 
+            //    Vector2Add(GetMousePosition(), (Vector2){ -44, 72 }), 20, 2, RED); // Data : Mouse in Cell
 
         EndDrawing();
     }
